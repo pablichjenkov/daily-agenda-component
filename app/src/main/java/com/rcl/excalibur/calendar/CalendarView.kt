@@ -50,23 +50,26 @@ fun CalendarView(calendarState: CalendarState) {
 
                 var arrangeToTheLeft = remember { true }
 
-                val leftOffsetMap = remember {
+                val offsetInfoMap = remember {
                     mapOf<Slot, OffsetInfo>(
                         calendarState.slots[0] to OffsetInfo(),
-                        calendarState.slots[2] to OffsetInfo(),
-                        calendarState.slots[4] to OffsetInfo(),
-                        calendarState.slots[6] to OffsetInfo(),
-                        calendarState.slots[8] to OffsetInfo()
-                    )
-                }
-
-                val rightOffsetMap = remember {
-                    mapOf<Slot, OffsetInfo>(
                         calendarState.slots[1] to OffsetInfo(),
+                        calendarState.slots[2] to OffsetInfo(),
                         calendarState.slots[3] to OffsetInfo(),
+                        calendarState.slots[4] to OffsetInfo(),
                         calendarState.slots[5] to OffsetInfo(),
+                        calendarState.slots[6] to OffsetInfo(),
                         calendarState.slots[7] to OffsetInfo(),
-                        calendarState.slots[9] to OffsetInfo()
+                        calendarState.slots[8] to OffsetInfo(),
+                        calendarState.slots[9] to OffsetInfo(),
+                        calendarState.slots[10] to OffsetInfo(),
+                        calendarState.slots[11] to OffsetInfo(),
+                        calendarState.slots[12] to OffsetInfo(),
+                        calendarState.slots[13] to OffsetInfo(),
+                        calendarState.slots[14] to OffsetInfo(),
+                        calendarState.slots[15] to OffsetInfo(),
+                        calendarState.slots[16] to OffsetInfo(),
+                        // TODO: Generate this programmatically
                     )
                 }
 
@@ -76,11 +79,14 @@ fun CalendarView(calendarState: CalendarState) {
                     val offsetY = (numbersOfSlots * SlotHeight).dp
 
                     var offsetXAbsolute: Dp = 0.dp
+                    var offsetInfo: OffsetInfo
                     val offsetX = if (arrangeToTheLeft) {
-                        offsetXAbsolute = leftOffsetMap[slot]?.getTotalOffset() ?: 0.dp
+                        offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
+                        offsetXAbsolute = offsetInfo.getTotalLeftOffset()
                         offsetXAbsolute
                     } else {
-                        offsetXAbsolute = rightOffsetMap[slot]?.getTotalOffset() ?: 0.dp
+                        offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
+                        offsetXAbsolute = offsetInfo.getTotalRightOffset()
                         -offsetXAbsolute
                     }
 
@@ -94,23 +100,36 @@ fun CalendarView(calendarState: CalendarState) {
                                 .wrapContentSize()
                         ) {
 
-                            entry.value.forEach { event ->
-                                val height = getEventHeight(event)
-                                val widthNumber = getEventWidth(event, slot, calendarState)
-                                val eventWidth = (slotRemainingWidth / widthNumber)
+                            var singleSlotWidth: Dp? = null
+                            entry.value.forEachIndexed { idx, event ->
+
+                                val eventHeight = getEventHeight(event)
+
+                                val eventWidth = if (event.isSingleSlot()) {
+                                    singleSlotWidth ?: run {
+                                        val amountOfSingleSlotEvents = (entry.value.size - idx)
+                                        ((eventContainerWidth - offsetInfo.getTotalLeftOffset() - offsetInfo.rightStartOffset) / amountOfSingleSlotEvents).also {
+                                            singleSlotWidth = it
+                                        }
+                                    }
+                                } else {
+                                    val widthNumber = getEventWidth(event, slot, calendarState)
+                                    (slotRemainingWidth / widthNumber)
+                                }
 
                                 updateEventOffsetX(
                                     calendarState = calendarState,
                                     event = event,
-                                    slotOffsetInfoMap = leftOffsetMap,
-                                    eventWidth = eventWidth
+                                    slotOffsetInfoMap = offsetInfoMap,
+                                    eventWidth = eventWidth,
+                                    isLeft = true
                                 )
 
-                                println("MainActivity: Adding Box in LTR with height: $height, width: $eventWidth")
+                                println("MainActivity: Adding Box in LTR with height: $eventHeight, width: $eventWidth")
 
                                 Column(
                                     modifier = Modifier
-                                        .height(height = height)
+                                        .height(height = eventHeight)
                                         .width(width = eventWidth)
                                         .background(color = generateRandomColor())
                                 ) {
@@ -127,23 +146,36 @@ fun CalendarView(calendarState: CalendarState) {
                                 .wrapContentSize(),
                         ) {
 
-                            entry.value.forEach { event ->
-                                val height = getEventHeight(event)
-                                val widthNumber = getEventWidth(event, slot, calendarState)
-                                val eventWidth = (slotRemainingWidth / widthNumber)
+                            var singleSlotWidth: Dp? = null
+                            entry.value.forEachIndexed { idx, event ->
+
+                                val eventHeight = getEventHeight(event)
+
+                                val eventWidth: Dp = if (event.isSingleSlot()) {
+                                    singleSlotWidth ?: run {
+                                        val amountOfSingleSlotEvents = (entry.value.size - idx)
+                                        ((eventContainerWidth - offsetInfo.leftStartOffset - offsetInfo.getTotalRightOffset()) / amountOfSingleSlotEvents).also {
+                                            singleSlotWidth = it
+                                        }
+                                    }
+                                } else {
+                                    val widthNumber = getEventWidth(event, slot, calendarState)
+                                    (slotRemainingWidth / widthNumber)
+                                }
 
                                 updateEventOffsetX(
                                     calendarState = calendarState,
                                     event = event,
-                                    slotOffsetInfoMap = rightOffsetMap,
-                                    eventWidth = eventWidth
+                                    slotOffsetInfoMap = offsetInfoMap,
+                                    eventWidth = eventWidth,
+                                    isLeft = false
                                 )
 
-                                println("MainActivity: Adding Box in RTL with height: $height, width: $eventWidth")
+                                println("MainActivity: Adding Box in RTL with height: $eventHeight, width: $eventWidth")
 
                                 Column(
                                     modifier = Modifier
-                                        .height(height = height)
+                                        .height(height = eventHeight)
                                         .width(width = eventWidth)
                                         .background(color = generateRandomColor())
                                 ) {

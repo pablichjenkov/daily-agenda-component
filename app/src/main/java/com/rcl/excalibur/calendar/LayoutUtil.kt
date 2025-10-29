@@ -45,7 +45,8 @@ internal fun updateEventOffsetX(
     calendarState: CalendarState,
     event: Event,
     slotOffsetInfoMap: Map<Slot, OffsetInfo>,
-    eventWidth: Dp
+    eventWidth: Dp,
+    isLeft: Boolean
 ) {
 
     val eventSlops = getSlopsIgnoreStartSlop(
@@ -53,13 +54,21 @@ internal fun updateEventOffsetX(
         event = event
     )
     val currentSlotOffsetInfo = slotOffsetInfoMap[event.startSlot]!!
-    currentSlotOffsetInfo.accumulatedOffset += eventWidth
+
+    if (isLeft) {
+        currentSlotOffsetInfo.leftAccumulated += eventWidth
+    } else {
+        currentSlotOffsetInfo.rightAccumulated += eventWidth
+    }
 
     eventSlops.forEach { slot ->
-        if (slotOffsetInfoMap.contains(slot)) {
-            val offsetInfo = slotOffsetInfoMap[slot]!!
-            offsetInfo.startOffset = currentSlotOffsetInfo.getTotalOffset()
-            println("LayoutUtil: slot: ${slot.title} has a new offset of: ${offsetInfo.startOffset}")
+        val offsetInfo = slotOffsetInfoMap[slot]!!
+        if (isLeft) {
+            offsetInfo.leftStartOffset = currentSlotOffsetInfo.getTotalLeftOffset()
+            println("LayoutUtil: slot: ${slot.title} has a new Left offset of: ${offsetInfo.leftAccumulated}")
+        } else {
+            offsetInfo.rightStartOffset = currentSlotOffsetInfo.getTotalRightOffset()
+            println("LayoutUtil: slot: ${slot.title} has a new Right offset of: ${offsetInfo.rightAccumulated}")
         }
     }
 }
@@ -80,6 +89,6 @@ fun getSlopsIgnoreStartSlop(
     return containingSlots
 }
 
-fun isSingleSlot(event: Event): Boolean {
-    return event.endTime - event.startTime < 0.6
+fun Event.isSingleSlot(): Boolean {
+    return endTime - startTime < 0.6
 }

@@ -28,8 +28,12 @@ class Event(
 )
 
 internal class OffsetInfo(
-    var startOffset: Dp = 0.dp,
-    var accumulatedOffset: Dp = 0.dp,
+    var leftStartOffset: Dp = 0.dp,
+    var leftAccumulated: Dp = 0.dp,
+    var rightStartOffset: Dp = 0.dp,
+    var rightAccumulated: Dp = 0.dp
 ) {
-    fun getTotalOffset() = startOffset + accumulatedOffset
+    fun getTotalLeftOffset() = leftStartOffset + leftAccumulated
+
+    fun getTotalRightOffset() = rightStartOffset + rightAccumulated
 }
