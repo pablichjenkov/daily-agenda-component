@@ -61,6 +61,10 @@ class Sample3(private val slots: List<Slot>) {
         slots[24] to computeSlotInfo(slot = slots[24]),
     )
 
+    /**
+     * Computes the amount of events that are contained by the given slop. The events will be the
+     * sum of earlier slots events plus this slot's events.
+     * */
     fun computeSlotInfo(slot: Slot): Int {
         var numberOfEvents = slotToEventMap[slot]?.size ?: 0
         for (slotIter in slots) {

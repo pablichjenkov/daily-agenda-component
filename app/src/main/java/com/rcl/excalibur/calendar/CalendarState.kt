@@ -20,6 +20,11 @@ class Slot(
     val time: Float, // 8.0, 8.5, 9.0, 9.5, 10.0 ... 23.5, 24.0
 )
 
+internal class SlotInfo(
+    var numberOfContainingEvents: Int,
+    var numberOfColumns: Int,
+)
+
 class Event(
     val startSlot: Slot,
     val title: String,

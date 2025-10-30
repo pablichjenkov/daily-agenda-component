@@ -69,13 +69,17 @@ fun CalendarView(calendarState: CalendarState) {
                         calendarState.slots[14] to OffsetInfo(),
                         calendarState.slots[15] to OffsetInfo(),
                         calendarState.slots[16] to OffsetInfo(),
+                        calendarState.slots[17] to OffsetInfo(),
+                        calendarState.slots[18] to OffsetInfo(),
+                        calendarState.slots[19] to OffsetInfo(),
+                        calendarState.slots[20] to OffsetInfo(),
                         // TODO: Generate this programmatically
                     )
                 }
 
                 calendarState.slotToEventMap.entries.forEach { entry ->
                     val slot = entry.key
-                    val numbersOfSlots = (slot.time - 8.0F) / 0.5F
+                    val numbersOfSlots = (slot.time - InitialSlotTime) / SlotUnit
                     val offsetY = (numbersOfSlots * SlotHeight).dp
 
                     var offsetXAbsolute: Dp = 0.dp
@@ -113,7 +117,7 @@ fun CalendarView(calendarState: CalendarState) {
                                         }
                                     }
                                 } else {
-                                    val widthNumber = getEventWidth(event, slot, calendarState)
+                                    val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(event, calendarState)
                                     (slotRemainingWidth / widthNumber)
                                 }
 
@@ -131,6 +135,7 @@ fun CalendarView(calendarState: CalendarState) {
                                     modifier = Modifier
                                         .height(height = eventHeight)
                                         .width(width = eventWidth)
+                                        // .padding(2.dp)
                                         .background(color = generateRandomColor())
                                 ) {
                                     Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
@@ -159,7 +164,7 @@ fun CalendarView(calendarState: CalendarState) {
                                         }
                                     }
                                 } else {
-                                    val widthNumber = getEventWidth(event, slot, calendarState)
+                                    val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(event, calendarState)
                                     (slotRemainingWidth / widthNumber)
                                 }
 
@@ -177,6 +182,7 @@ fun CalendarView(calendarState: CalendarState) {
                                     modifier = Modifier
                                         .height(height = eventHeight)
                                         .width(width = eventWidth)
+                                        // .padding(2.dp)
                                         .background(color = generateRandomColor())
                                 ) {
                                     Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
