@@ -2,6 +2,7 @@ package com.macaosoftware.ui
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 
 const val InitialSlotTime = 8.0F // TODO: Use 0.0F as initial slot time
 const val SlotUnit = 0.5F // TODO: Use 1 as slot unit
@@ -20,7 +21,10 @@ fun getEventHeight(event: Event): Dp {
  * For a given event, it returns the maximum number of sibling events, across all the slots the
  * event touches.
  * */
-fun getMaximumNumberOfSiblingsInContainingSlots(event: Event, dailyAgendaState: DailyAgendaState): Int {
+fun getMaximumNumberOfSiblingsInContainingSlots(
+    event: Event,
+    dailyAgendaState: DailyAgendaState
+): Int {
     val containingSlots = getSlotsIncludeStartSlot(event, dailyAgendaState)
     val maxNumberOfEvents = containingSlots.fold(initial = 1) { maxNumberOfEvents, slot ->
         val numberOfEvents = dailyAgendaState.slotInfoMap[slot]?.getTotalColumnSpans() ?: 0
@@ -105,4 +109,72 @@ internal fun updateEventOffsetX(
 
 fun Event.isSingleSlot(): Boolean {
     return endTime - startTime < 0.6
+}
+
+internal fun getEventWidthFromLeft(
+    dailyAgendaState: DailyAgendaState,
+    event: Event,
+    amountOfEventsInSameSlot: Int,
+    currentEventIndex: Int,
+    eventContainerWidth: Dp,
+    offsetInfo: OffsetInfo,
+    slotRemainingWidth: Dp,
+    minimumWidth: Dp
+): Dp {
+    if (dailyAgendaState.config.eventWidthType == EventWidthType.FixedSize) {
+        return minimumWidth
+    }
+
+    var singleSlotWidth: Dp? = null
+
+    val eventWidth = if (event.isSingleSlot()) {
+        singleSlotWidth ?: run {
+            val amountOfSingleSlotEvents = (amountOfEventsInSameSlot - currentEventIndex)
+            ((eventContainerWidth - offsetInfo.getTotalLeftOffset() - offsetInfo.rightStartOffset) / amountOfSingleSlotEvents).also {
+                singleSlotWidth = it
+            }
+        }
+    } else {
+        val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
+            event,
+            dailyAgendaState
+        )
+        (slotRemainingWidth / widthNumber)
+    }
+
+    return max(minimumWidth, eventWidth)
+}
+
+internal fun getEventWidthFromRight(
+    dailyAgendaState: DailyAgendaState,
+    event: Event,
+    amountOfEventsInSameSlot: Int,
+    currentEventIndex: Int,
+    eventContainerWidth: Dp,
+    offsetInfo: OffsetInfo,
+    slotRemainingWidth: Dp,
+    minimumWidth: Dp
+): Dp {
+    if (dailyAgendaState.config.eventWidthType == EventWidthType.FixedSize) {
+        return minimumWidth
+    }
+
+    var singleSlotWidth: Dp? = null
+
+    val eventWidth: Dp = if (event.isSingleSlot()) {
+        singleSlotWidth ?: run {
+            val amountOfSingleSlotEvents = (amountOfEventsInSameSlot - currentEventIndex)
+            ((eventContainerWidth - offsetInfo.leftStartOffset - offsetInfo.getTotalRightOffset()) / amountOfSingleSlotEvents).also {
+                singleSlotWidth = it
+            }
+        }
+    } else {
+        val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
+            event,
+            dailyAgendaState
+        )
+        (slotRemainingWidth / widthNumber)
+    }
+
+    return max(minimumWidth, eventWidth)
 }

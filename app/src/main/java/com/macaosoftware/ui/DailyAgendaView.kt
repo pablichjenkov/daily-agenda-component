@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.macaosoftware.ui.theme.CalendarTheme
 import kotlin.random.Random
 
@@ -49,169 +48,148 @@ fun DailyAgendaView(dailyAgendaState: DailyAgendaState) {
                 val eventContainerWidth =
                     (containerSize.width.dp / density) - TimeTitleLeftPadding.dp
 
-                val minimumWidth = eventContainerWidth / dailyAgendaState.maxColumns
+                LeftThenRightLayout(
+                    dailyAgendaState = dailyAgendaState,
+                    eventContainerWidth = eventContainerWidth
+                )
+            }
+        }
+    }
+}
 
-                println("DailyAgendaState :: minimumWidth = ${dailyAgendaState.maxColumns}")
+@Composable
+private fun LeftThenRightLayout(
+    dailyAgendaState: DailyAgendaState,
+    eventContainerWidth: Dp
+) {
+    val minimumWidth = eventContainerWidth / dailyAgendaState.maxColumns
 
-                var arrangeToTheLeft = remember { true }
+    var arrangeToTheLeft = remember { true }
 
-                val offsetInfoMap = remember {
-                    mapOf<Slot, OffsetInfo>(
-                        dailyAgendaState.slots[0] to OffsetInfo(),
-                        dailyAgendaState.slots[1] to OffsetInfo(),
-                        dailyAgendaState.slots[2] to OffsetInfo(),
-                        dailyAgendaState.slots[3] to OffsetInfo(),
-                        dailyAgendaState.slots[4] to OffsetInfo(),
-                        dailyAgendaState.slots[5] to OffsetInfo(),
-                        dailyAgendaState.slots[6] to OffsetInfo(),
-                        dailyAgendaState.slots[7] to OffsetInfo(),
-                        dailyAgendaState.slots[8] to OffsetInfo(),
-                        dailyAgendaState.slots[9] to OffsetInfo(),
-                        dailyAgendaState.slots[10] to OffsetInfo(),
-                        dailyAgendaState.slots[11] to OffsetInfo(),
-                        dailyAgendaState.slots[12] to OffsetInfo(),
-                        dailyAgendaState.slots[13] to OffsetInfo(),
-                        dailyAgendaState.slots[14] to OffsetInfo(),
-                        dailyAgendaState.slots[15] to OffsetInfo(),
-                        dailyAgendaState.slots[16] to OffsetInfo(),
-                        dailyAgendaState.slots[17] to OffsetInfo(),
-                        dailyAgendaState.slots[18] to OffsetInfo(),
-                        dailyAgendaState.slots[19] to OffsetInfo(),
-                        dailyAgendaState.slots[20] to OffsetInfo(),
-                        // TODO: Generate this programmatically
+    val offsetInfoMap = remember {
+        mapOf<Slot, OffsetInfo>(
+            dailyAgendaState.slots[0] to OffsetInfo(),
+            dailyAgendaState.slots[1] to OffsetInfo(),
+            dailyAgendaState.slots[2] to OffsetInfo(),
+            dailyAgendaState.slots[3] to OffsetInfo(),
+            dailyAgendaState.slots[4] to OffsetInfo(),
+            dailyAgendaState.slots[5] to OffsetInfo(),
+            dailyAgendaState.slots[6] to OffsetInfo(),
+            dailyAgendaState.slots[7] to OffsetInfo(),
+            dailyAgendaState.slots[8] to OffsetInfo(),
+            dailyAgendaState.slots[9] to OffsetInfo(),
+            dailyAgendaState.slots[10] to OffsetInfo(),
+            dailyAgendaState.slots[11] to OffsetInfo(),
+            dailyAgendaState.slots[12] to OffsetInfo(),
+            dailyAgendaState.slots[13] to OffsetInfo(),
+            dailyAgendaState.slots[14] to OffsetInfo(),
+            dailyAgendaState.slots[15] to OffsetInfo(),
+            dailyAgendaState.slots[16] to OffsetInfo(),
+            dailyAgendaState.slots[17] to OffsetInfo(),
+            dailyAgendaState.slots[18] to OffsetInfo(),
+            dailyAgendaState.slots[19] to OffsetInfo(),
+            dailyAgendaState.slots[20] to OffsetInfo(),
+            // TODO: Generate this programmatically
+        )
+    }
+
+    dailyAgendaState.slotToEventMap.entries.forEach { entry ->
+        val slot = entry.key
+        val numbersOfSlots = (slot.time - InitialSlotTime) / SlotUnit
+        val offsetY = (numbersOfSlots * SlotHeight).dp
+
+        var offsetXAbsolute: Dp = 0.dp
+        var offsetInfo: OffsetInfo
+        val offsetX = if (arrangeToTheLeft) {
+            offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
+            offsetXAbsolute = offsetInfo.getTotalLeftOffset()
+            offsetXAbsolute
+        } else {
+            offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
+            offsetXAbsolute = offsetInfo.getTotalRightOffset()
+            -offsetXAbsolute
+        }
+
+        val slotRemainingWidth = eventContainerWidth - offsetXAbsolute
+
+        if (arrangeToTheLeft) {
+            Row(
+                modifier = Modifier
+                    .offset(y = offsetY, x = offsetX)
+                    .wrapContentSize()
+            ) {
+                entry.value.forEachIndexed { idx, event ->
+                    val eventHeight = getEventHeight(event)
+                    val eventWidth = getEventWidthFromLeft(
+                        dailyAgendaState = dailyAgendaState,
+                        event = event,
+                        amountOfEventsInSameSlot = entry.value.size,
+                        currentEventIndex = idx,
+                        eventContainerWidth = eventContainerWidth,
+                        offsetInfo = offsetInfo,
+                        slotRemainingWidth = slotRemainingWidth,
+                        minimumWidth = minimumWidth
                     )
+                    updateEventOffsetX(
+                        dailyAgendaState = dailyAgendaState,
+                        event = event,
+                        slotOffsetInfoMap = offsetInfoMap,
+                        eventWidth = eventWidth,
+                        isLeft = true
+                    )
+                    Column(
+                        modifier = Modifier
+                            .height(height = eventHeight)
+                            .width(width = eventWidth)
+                            .padding(2.dp)
+                            .padding(top = 1.dp)
+                            .background(color = generateRandomColor())
+                    ) {
+                        Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
+                    }
                 }
+            }
 
-                dailyAgendaState.slotToEventMap.entries.forEach { entry ->
-                    val slot = entry.key
-                    val numbersOfSlots = (slot.time - InitialSlotTime) / SlotUnit
-                    val offsetY = (numbersOfSlots * SlotHeight).dp
-
-                    var offsetXAbsolute: Dp = 0.dp
-                    var offsetInfo: OffsetInfo
-                    val offsetX = if (arrangeToTheLeft) {
-                        offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
-                        offsetXAbsolute = offsetInfo.getTotalLeftOffset()
-                        offsetXAbsolute
-                    } else {
-                        offsetInfo = offsetInfoMap[slot] ?: OffsetInfo()
-                        offsetXAbsolute = offsetInfo.getTotalRightOffset()
-                        -offsetXAbsolute
+        } else {
+            RtlCustomRow(
+                modifier = Modifier
+                    .offset(y = offsetY, x = offsetX)
+                    .wrapContentSize(),
+            ) {
+                entry.value.forEachIndexed { idx, event ->
+                    val eventHeight = getEventHeight(event)
+                    val eventWidth = getEventWidthFromRight(
+                        dailyAgendaState = dailyAgendaState,
+                        event = event,
+                        amountOfEventsInSameSlot = entry.value.size,
+                        currentEventIndex = idx,
+                        eventContainerWidth = eventContainerWidth,
+                        offsetInfo = offsetInfo,
+                        slotRemainingWidth = slotRemainingWidth,
+                        minimumWidth = minimumWidth
+                    )
+                    updateEventOffsetX(
+                        dailyAgendaState = dailyAgendaState,
+                        event = event,
+                        slotOffsetInfoMap = offsetInfoMap,
+                        eventWidth = eventWidth,
+                        isLeft = false
+                    )
+                    Column(
+                        modifier = Modifier
+                            .height(height = eventHeight)
+                            .width(width = eventWidth)
+                            .padding(2.dp)
+                            .padding(top = 1.dp)
+                            .background(color = generateRandomColor())
+                    ) {
+                        Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
                     }
-
-                    val slotRemainingWidth = eventContainerWidth - offsetXAbsolute
-
-                    if (arrangeToTheLeft) {
-                        println("MainActivity: Adding new LtrRow with offsetY: $offsetY, offsetX: $offsetX")
-                        Row(
-                            modifier = Modifier
-                                .offset(y = offsetY, x = offsetX)
-                                .wrapContentSize()
-                        ) {
-
-                            var singleSlotWidth: Dp? = null
-                            entry.value.forEachIndexed { idx, event ->
-
-                                val eventHeight = getEventHeight(event)
-
-                                val eventWidth = if (event.isSingleSlot()) {
-                                    singleSlotWidth ?: run {
-                                        val amountOfSingleSlotEvents = (entry.value.size - idx)
-                                        ((eventContainerWidth - offsetInfo.getTotalLeftOffset() - offsetInfo.rightStartOffset) / amountOfSingleSlotEvents).also {
-                                            singleSlotWidth = it
-                                        }
-                                    }
-                                } else {
-                                    val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
-                                        event,
-                                        dailyAgendaState
-                                    )
-                                    (slotRemainingWidth / widthNumber)
-                                }
-
-                                val finalEventWidth = max(minimumWidth, eventWidth)
-
-                                updateEventOffsetX(
-                                    dailyAgendaState = dailyAgendaState,
-                                    event = event,
-                                    slotOffsetInfoMap = offsetInfoMap,
-                                    eventWidth = finalEventWidth,
-                                    isLeft = true
-                                )
-
-                                println("MainActivity: Adding Box in LTR with height: $eventHeight, width: $eventWidth")
-
-                                Column(
-                                    modifier = Modifier
-                                        .height(height = eventHeight)
-                                        .width(width = finalEventWidth)
-                                        .padding(2.dp)
-                                        .padding(top = 1.dp)
-                                        .background(color = generateRandomColor())
-                                ) {
-                                    Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
-                                }
-                            }
-                        }
-
-                    } else {
-                        println("MainActivity: Adding new RtlRow with offsetY: $offsetY, offsetX: $offsetX")
-                        RtlCustomRow(
-                            modifier = Modifier
-                                .offset(y = offsetY, x = offsetX)
-                                .wrapContentSize(),
-                        ) {
-
-                            var singleSlotWidth: Dp? = null
-                            entry.value.forEachIndexed { idx, event ->
-
-                                val eventHeight = getEventHeight(event)
-
-                                val eventWidth: Dp = if (event.isSingleSlot()) {
-                                    singleSlotWidth ?: run {
-                                        val amountOfSingleSlotEvents = (entry.value.size - idx)
-                                        ((eventContainerWidth - offsetInfo.leftStartOffset - offsetInfo.getTotalRightOffset()) / amountOfSingleSlotEvents).also {
-                                            singleSlotWidth = it
-                                        }
-                                    }
-                                } else {
-                                    val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
-                                        event,
-                                        dailyAgendaState
-                                    )
-                                    (slotRemainingWidth / widthNumber)
-                                }
-
-                                val finalEventWidth = max(minimumWidth, eventWidth)
-
-                                updateEventOffsetX(
-                                    dailyAgendaState = dailyAgendaState,
-                                    event = event,
-                                    slotOffsetInfoMap = offsetInfoMap,
-                                    eventWidth = finalEventWidth,
-                                    isLeft = false
-                                )
-
-                                println("MainActivity: Adding Box in RTL with height: $eventHeight, width: $eventWidth")
-
-                                Column(
-                                    modifier = Modifier
-                                        .height(height = eventHeight)
-                                        .width(width = finalEventWidth)
-                                        .padding(2.dp)
-                                        .padding(top = 1.dp)
-                                        .background(color = generateRandomColor())
-                                ) {
-                                    Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
-                                }
-                            }
-                        }
-                    }
-
-                    arrangeToTheLeft = !arrangeToTheLeft
                 }
             }
         }
+
+        arrangeToTheLeft = !arrangeToTheLeft
     }
 }
 

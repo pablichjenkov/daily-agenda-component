@@ -2,14 +2,14 @@ package com.macaosoftware.ui
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.macaosoftware.ui.data.Sample3
-import com.macaosoftware.ui.data.Slots
+import com.macaosoftware.ui.Config.Companion.defaultValue
 
 class DailyAgendaState(
     val slots: List<Slot>,
     val slotToEventMap: Map<Slot, List<Event>>,// = sampleData.slotToEventMap
     val slotInfoMap: Map<Slot, SlotInfo>,
-    val maxColumns: Int
+    val maxColumns: Int,
+    val config: Config = defaultValue()
 )
 
 class Slot(
@@ -43,3 +43,15 @@ internal class OffsetInfo(
 
     fun getTotalRightOffset() = rightStartOffset + rightAccumulated
 }
+
+data class Config(
+    val layoutType: LayoutType = LayoutType.MixedDirections,
+    val eventWidthType: EventWidthType = EventWidthType.VariableSize
+) {
+    companion object {
+        fun defaultValue(): Config = Config()
+    }
+}
+
+enum class LayoutType { MixedDirections, LeftToRight, RightToLeft }
+enum class EventWidthType { FixedSize, VariableSize }
