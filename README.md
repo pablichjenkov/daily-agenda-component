@@ -2,6 +2,7 @@
 This is a compose view useful for Apps that needs to present daily events or daily activities type of functionality. The idea came out after searching for a daily calendar similar to Microsotf Outlook App for Android. There seems to be not many libraries offering this functionality and the ones that do do not meet all the requirements.
 
 ## How to use it
+Bellow are some code snippets to illustrate the different layout configurations the Agenda View offers.
 
 ```kotlin
 val dailyAgendaState = remember {
@@ -34,6 +35,23 @@ DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
 <img width="300" alt="daily-agenda-same-width" src="https://github.com/user-attachments/assets/20e380e7-2c81-45bc-bd7d-a2d6596f4b39" />
+
+---
+
+```kotlin
+val dailyAgendaState = remember {
+    DailyAgendaStateController(
+            slots = Slots.slots,
+            slotToEventMap = Sample3(Slots.slots).slotToEventMap,
+            config = Config.MixedDirections(eventWidthType = EventWidthType.FixedSizeFillLastEvent) // <-- Configuration
+        )
+        .computeNextState()
+}
+
+DailyAgendaView(dailyAgendaState = dailyAgendaState)
+```
+
+<img width="300" alt="daily-agenda-mix-directions-fill-end" src="https://github.com/user-attachments/assets/fef4fa49-914a-4dd2-ab44-ef8b738a1132" />
 
 ---
 
