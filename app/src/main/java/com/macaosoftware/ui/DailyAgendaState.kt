@@ -63,4 +63,4 @@ sealed class Config{
     }
 }
 
-enum class EventWidthType { FixedSize, VariableSize }
+enum class EventWidthType { VariableSize, FixedSize, FixedSizeFillLastEvent }

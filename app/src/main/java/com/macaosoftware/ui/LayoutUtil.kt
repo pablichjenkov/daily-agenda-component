@@ -198,7 +198,12 @@ private fun shouldReturnMinimumAllowedWidth(
         }
 
         is Config.MixedDirections -> {
-            return config.eventWidthType == EventWidthType.FixedSize
+            return when (config.eventWidthType) {
+                EventWidthType.VariableSize -> false
+                EventWidthType.FixedSize -> true
+                EventWidthType.FixedSizeFillLastEvent -> !event.isSingleSlot()
+            }
+
         }
 
         is Config.RightToLeft -> {

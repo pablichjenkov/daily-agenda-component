@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                             DailyAgendaStateController(
                                 slots = Slots.slots,
                                 slotToEventMap = Sample3(Slots.slots).slotToEventMap,
-                                config = Config.RightToLeft(lastEventFillRow = false)
+                                config = Config.MixedDirections(eventWidthType = EventWidthType.FixedSizeFillLastEvent)
                             ).computeNextState()
                         }
                         DailyAgendaView(
