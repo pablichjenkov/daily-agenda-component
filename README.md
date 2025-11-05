@@ -36,7 +36,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-demo" src="https://github.com/user-attachments/assets/5de0ddd4-115d-4f06-8afb-9f7edab86fbe" />
+<img width="300" alt="daily-agenda-mix-directions-variable-width" src="https://github.com/user-attachments/assets/a914051f-0da5-4bcf-9519-037bebae4cb5" />
 
 ---
 
@@ -55,7 +55,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-same-width" src="https://github.com/user-attachments/assets/20e380e7-2c81-45bc-bd7d-a2d6596f4b39" />
+<img width="300" alt="daily-agenda-mix-directions-same-width" src="https://github.com/user-attachments/assets/f8b432fa-03b1-4764-852b-31de5e852dd1" />
 
 ---
 
@@ -74,7 +74,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-mix-directions-fill-end" src="https://github.com/user-attachments/assets/fef4fa49-914a-4dd2-ab44-ef8b738a1132" />
+<img width="300" alt="daily-agenda-mix-directions-same-width-fill-end" src="https://github.com/user-attachments/assets/f4db4ff1-700a-4af8-9ebe-a5969b2164b5" />
 
 ---
 
@@ -93,7 +93,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-LTR-fill" src="https://github.com/user-attachments/assets/60d41a6f-6a8b-4321-9078-cc8ce1de0b10" />
+<img width="300" alt="daily-agenda-LTR-fill-end" src="https://github.com/user-attachments/assets/a67d206c-c92f-4eee-b0b6-64ce4fcaa823" />
 
 ---
 
@@ -112,7 +112,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-LTR-no-fill" src="https://github.com/user-attachments/assets/ccd8f8a7-ed2b-4ad1-a8e8-3ce589306119" />
+<img width="300" alt="daily-agenda-LTR-no-fill-end" src="https://github.com/user-attachments/assets/a4595b2e-9b29-4bbd-8a4d-6b8c3688163d" />
 
 ---
 
@@ -131,7 +131,7 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-RTL-fill" src="https://github.com/user-attachments/assets/817fa988-f43e-4bba-8a6d-b0e12f331769" />
+<img width="300" alt="daily-agenda-RTL-fill-end" src="https://github.com/user-attachments/assets/aef40594-2ba2-4c00-b93c-8f9eec8b30d2" />
 
 ---
 
@@ -150,7 +150,8 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-RTL-no-fill" src="https://github.com/user-attachments/assets/3a5c75c3-40d9-4243-b9b3-67830be66a66" />
+<img width="300" alt="daily-agenda-RTL-no-fill-end" src="https://github.com/user-attachments/assets/9994e98d-6d2d-4168-b2b4-59ac45e5210e" />
+
 
 ## Contributions
 
