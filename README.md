@@ -11,6 +11,16 @@ Daily Agenda View is a compose multiplatform component useful for Apps that need
 | JS       |     ✅     |
 | Wasm     |     ✅     |
 
+## Gradle Coordinates
+
+```kotlin
+sourceSets {
+    commonMain.dependencies {
+        implementation("io.github.pablichjenkov:daily-agenda-view:0.1.0")
+    }
+}
+```
+
 ## How to use it
 Bellow there is some code snippets that illustrate the different configurations.
 
