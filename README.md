@@ -1,5 +1,15 @@
 ## Daily Agenda View
-Daily Agenda View is a compose multiplatform component useful for Apps that need to present daily events or daily activities type of views. The idea came out after searching for a daily calendar similar to **Microsotf Outlook App for Android** but nothing came out of Github. There seems to be not many libraries offering this functionality and the ones that do, do not meet all the requirements.
+Daily Agenda View is a compose multiplatform component useful for Apps that need to present daily events or daily activities type of views.
+<BR/>
+<BR/>
+Use cases:
+- Daily task planner apps.
+- App for venues which rent spaces based on time.
+- Tv Apps with show scheduling.
+- Music Festival Apps with events overlapping at the same time.
+- Anything that comes to your mind.
+
+## Gradle Setup
 
 ```kotlin
 sourceSets {
@@ -74,7 +84,15 @@ val dailyAgendaState = remember {
 DailyAgendaView(dailyAgendaState = dailyAgendaState)
 ```
 
-<img width="300" alt="daily-agenda-mix-directions-same-width-fill-end" src="https://github.com/user-attachments/assets/f4db4ff1-700a-4af8-9ebe-a5969b2164b5" />
+<table>
+    <tr>
+        <td>
+            <img width="250" alt="daily-agenda-mix-directions-same-width-fill-end" src="https://github.com/user-attachments/assets/f4db4ff1-700a-4af8-9ebe-a5969b2164b5" />
+        </td>
+        <td><img width="250" alt="daily-agenda-mix-directions-same-width-fill-end" src="https://github.com/user-attachments/assets/81af8d8e-1d6d-404c-b81d-be6d3faec691" />
+        </td>
+    </tr>
+</table>
 
 ---
 
