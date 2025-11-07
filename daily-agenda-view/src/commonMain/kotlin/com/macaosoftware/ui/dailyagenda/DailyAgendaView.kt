@@ -1,6 +1,5 @@
 package com.macaosoftware.ui.dailyagenda
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,19 +11,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlin.random.Random
 
 @Composable
-fun DailyAgendaView(dailyAgendaState: DailyAgendaState) {
+fun DailyAgendaView(
+    dailyAgendaState: DailyAgendaState,
+    eventContentProvider: @Composable (event: Event) -> Unit
+) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -47,7 +46,8 @@ fun DailyAgendaView(dailyAgendaState: DailyAgendaState) {
 
                 LeftThenRightLayout(
                     dailyAgendaState = dailyAgendaState,
-                    eventContainerWidth = eventContainerWidth
+                    eventContainerWidth = eventContainerWidth,
+                    eventContentProvider = eventContentProvider
                 )
             }
         }
@@ -57,7 +57,8 @@ fun DailyAgendaView(dailyAgendaState: DailyAgendaState) {
 @Composable
 private fun LeftThenRightLayout(
     dailyAgendaState: DailyAgendaState,
-    eventContainerWidth: Dp
+    eventContainerWidth: Dp,
+    eventContentProvider: @Composable (event: Event) -> Unit
 ) {
     val config = dailyAgendaState.config
     val minimumWidth = eventContainerWidth / dailyAgendaState.maxColumns
@@ -148,12 +149,7 @@ private fun LeftThenRightLayout(
                             .offset(y = eventTranslation)
                             .height(height = eventHeight)
                             .width(width = eventWidth)
-                            .padding(2.dp)
-                            .padding(top = 1.dp)
-                            .background(color = generateRandomColor())
-                    ) {
-                        Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
-                    }
+                    ) { eventContentProvider.invoke(event) }
                 }
             }
 
@@ -188,12 +184,7 @@ private fun LeftThenRightLayout(
                             .offset(y = eventTranslation)
                             .height(height = eventHeight)
                             .width(width = eventWidth)
-                            .padding(2.dp)
-                            .padding(top = 1.dp)
-                            .background(color = generateRandomColor())
-                    ) {
-                        Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
-                    }
+                    ) { eventContentProvider.invoke(event) }
                 }
             }
         }
@@ -202,12 +193,4 @@ private fun LeftThenRightLayout(
             arrangeToTheLeft = !arrangeToTheLeft
         }
     }
-}
-
-fun generateRandomColor(): Color {
-    val red =
-        Random.nextInt(256) // Generates a random integer between 0 (inclusive) and 256 (exclusive)
-    val green = Random.nextInt(256)
-    val blue = Random.nextInt(256)
-    return Color(red, green, blue)
 }

@@ -16,7 +16,7 @@ class Slot(
     val time: Float, // 8.0, 8.5, 9.0, 9.5, 10.0 ... 23.5, 24.0
 )
 
-// TODO: Change var with val
+// TODO: Change var with val SlotInfo.copy()
 data class SlotInfo(
     var numberOfContainingEvents: Int,
     var numberOfColumnsLeft: Int,

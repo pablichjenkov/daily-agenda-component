@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 
 /**
- * Returns the height in Dp for a given Event based on the amount of slots it touches.
+ * Returns the Event Y axis offset in Dp from the slot start time.
  * */
 fun getEventTranslationInSlot(event: Event, config: Config): Dp {
     val fractionOfSlots = (event.startTime - event.startSlot.time) / config.slotUnit

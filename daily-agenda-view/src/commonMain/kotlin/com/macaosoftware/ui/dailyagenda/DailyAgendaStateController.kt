@@ -3,24 +3,60 @@ package com.macaosoftware.ui.dailyagenda
 import androidx.compose.runtime.mutableStateOf
 
 class DailyAgendaStateController(
-    val slots: List<Slot>,
-    val slotToEventMap: Map<Slot, List<Event>>,
-    val config: Config
+    private val slots: List<Slot>,
+    slotToEventMap: Map<Slot, List<Event>>,
+    private val config: Config
 ) {
 
+    private val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
     val state = mutableStateOf<DailyAgendaState?>(null)
 
-    fun start() {
+    init {
+        /**
+         * Sort the events to maximize spacing when the layout runs.
+         * */
+        val endTimeComparator = Comparator { event1: Event, event2: Event ->
+            (event2.endTime - event1.endTime).toInt()
+        }
+        slotToEventMap.entries.forEach { entry ->
+            val eventsSortedByEndTime = entry.value.sortedWith(endTimeComparator).toMutableList()
+            slotToEventMapSorted.put(entry.key, eventsSortedByEndTime)
+        }
+        updateState()
+    }
 
+    fun addEvent(event: Event): Boolean {
+        val siblingEvents = slotToEventMapSorted[event.startSlot]?.toMutableList() ?: return false
+
+        val index = siblingEvents.binarySearch(fromIndex = 0, toIndex = siblingEvents.lastIndex) {
+            (event.endTime - it.endTime).toInt()
+        }
+        val insertionIndex = if (index < 0) -(index + 1) else index
+        siblingEvents.add(insertionIndex, event)
+
+        // Update state
+        updateState()
+        return true
+    }
+
+    fun removeEvent(event: Event): Boolean {
+        val siblingEvents = slotToEventMapSorted[event.startSlot]?.toMutableList() ?: return false
+        return if (siblingEvents.remove(event)) { // Update only if removal was success
+            updateState()
+            true
+        } else false
+    }
+
+    private fun updateState() {
+        // Precompute some measurement and layout info aot for performance
         val result = computeSlotInfo(
             slots = slots,
-            slotToEventMap = slotToEventMap,
+            slotToEventMap = slotToEventMapSorted,
             config = config
         )
-
         state.value = DailyAgendaState(
             slots = slots,
-            slotToEventMap = slotToEventMap,
+            slotToEventMap = slotToEventMapSorted,
             slotInfoMap = result.slotInfoMap,
             maxColumns = result.maxColumns,
             config = config
