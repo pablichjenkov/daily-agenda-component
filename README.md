@@ -19,6 +19,10 @@ sourceSets {
 }
 ```
 
+<table>
+<tr><th>Platform Support</th><th>Kotlin Compatibility</th></tr>
+<tr><td>
+
 | Platform | Supported |
 |----------|:---------:|
 | Android  |     ✅     |
@@ -26,6 +30,17 @@ sourceSets {
 | Desktop  |     ✅     |
 | JS       |     ✅     |
 | Wasm     |     ✅     |
+
+</td>
+<td>
+
+|Agenda Version|Kotlin Version|
+|--|--|
+|0.2.0|2.2.21|
+|0.3.0|2.2.21|
+
+</td></tr>
+</table>
 
 
 ## How to use it
