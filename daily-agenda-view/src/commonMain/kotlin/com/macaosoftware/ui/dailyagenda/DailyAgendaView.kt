@@ -25,6 +25,9 @@ fun DailyAgendaView(
     eventContentProvider: @Composable (event: Event) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val currentTimeMarkerStateController = remember {
+        CurrentTimeMarkerStateController(dailyAgendaState = dailyAgendaState)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,25 +35,37 @@ fun DailyAgendaView(
     ) {
         Box {
             SlotsLayer(dailyAgendaState = dailyAgendaState)
-            Box(
-                modifier = Modifier
-                    .padding(start = dailyAgendaState.config.timelineLeftPadding.dp)
-                    .fillMaxSize()
-            ) {
-
-                val containerSize = LocalWindowInfo.current.containerSize
-                val density = LocalDensity.current.density
-
-                val eventContainerWidth =
-                    (containerSize.width.dp / density) - dailyAgendaState.config.timelineLeftPadding.dp
-
-                LeftThenRightLayout(
-                    dailyAgendaState = dailyAgendaState,
-                    eventContainerWidth = eventContainerWidth,
-                    eventContentProvider = eventContentProvider
-                )
-            }
+            DailyAgendaRootLayout(
+                dailyAgendaState = dailyAgendaState,
+                eventContentProvider = eventContentProvider
+            )
+            CurrentTimeMarkerView(currentTimeMarkerStateController)
         }
+    }
+}
+
+@Composable
+private fun DailyAgendaRootLayout(
+    dailyAgendaState: DailyAgendaState,
+    eventContentProvider: @Composable (event: Event) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .padding(start = dailyAgendaState.config.timelineLeftPadding.dp)
+            .fillMaxSize()
+    ) {
+
+        val containerSize = LocalWindowInfo.current.containerSize
+        val density = LocalDensity.current.density
+
+        val eventContainerWidth =
+            (containerSize.width.dp / density) - dailyAgendaState.config.timelineLeftPadding.dp
+
+        LeftThenRightLayout(
+            dailyAgendaState = dailyAgendaState,
+            eventContainerWidth = eventContainerWidth,
+            eventContentProvider = eventContentProvider
+        )
     }
 }
 

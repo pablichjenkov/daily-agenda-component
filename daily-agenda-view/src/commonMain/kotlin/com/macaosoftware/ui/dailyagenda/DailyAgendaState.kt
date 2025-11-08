@@ -13,7 +13,7 @@ class DailyAgendaState(
 
 class Slot(
     val title: String,
-    val time: Float, // 8.0, 8.5, 9.0, 9.5, 10.0 ... 23.5, 24.0
+    val time: Float,
 )
 
 // TODO: Change var with val SlotInfo.copy()
