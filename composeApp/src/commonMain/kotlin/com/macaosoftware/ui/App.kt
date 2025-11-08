@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import com.macaosoftware.ui.dailyagenda.DailyAgendaStateController
 import com.macaosoftware.ui.dailyagenda.DailyAgendaView
 import com.macaosoftware.ui.data.Sample0
+import com.macaosoftware.ui.data.Sample1
+import com.macaosoftware.ui.data.Sample2
+import com.macaosoftware.ui.data.Sample3
 import com.macaosoftware.ui.data.Slots
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
@@ -35,7 +38,7 @@ fun App() {
                 val stateController = remember {
                     DailyAgendaStateController(
                         slots = Slots.slots,
-                        slotToEventMap = Sample0(Slots.slots).slotToEventMap,
+                        slotToEventMap = Sample3(Slots.slots).slotToEventMap,
                         config = Slots.demoConfigLTR
                     )
                 }

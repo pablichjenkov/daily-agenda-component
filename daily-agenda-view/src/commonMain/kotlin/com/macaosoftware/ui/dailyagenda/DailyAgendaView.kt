@@ -88,35 +88,16 @@ private fun LeftThenRightLayout(
     }
 
     val offsetInfoMap = remember(key1 = dailyAgendaState, key2 = eventContainerWidth) {
-        mapOf<Slot, OffsetInfo>(
-            dailyAgendaState.slots[0] to OffsetInfo(),
-            dailyAgendaState.slots[1] to OffsetInfo(),
-            dailyAgendaState.slots[2] to OffsetInfo(),
-            dailyAgendaState.slots[3] to OffsetInfo(),
-            dailyAgendaState.slots[4] to OffsetInfo(),
-            dailyAgendaState.slots[5] to OffsetInfo(),
-            dailyAgendaState.slots[6] to OffsetInfo(),
-            dailyAgendaState.slots[7] to OffsetInfo(),
-            dailyAgendaState.slots[8] to OffsetInfo(),
-            dailyAgendaState.slots[9] to OffsetInfo(),
-            dailyAgendaState.slots[10] to OffsetInfo(),
-            dailyAgendaState.slots[11] to OffsetInfo(),
-            dailyAgendaState.slots[12] to OffsetInfo(),
-            dailyAgendaState.slots[13] to OffsetInfo(),
-            dailyAgendaState.slots[14] to OffsetInfo(),
-            dailyAgendaState.slots[15] to OffsetInfo(),
-            dailyAgendaState.slots[16] to OffsetInfo(),
-            dailyAgendaState.slots[17] to OffsetInfo(),
-            dailyAgendaState.slots[18] to OffsetInfo(),
-            dailyAgendaState.slots[19] to OffsetInfo(),
-            dailyAgendaState.slots[20] to OffsetInfo(),
-            // TODO: Generate this programmatically
-        )
+        val offsetMap = mutableMapOf<Slot, OffsetInfo>()
+        for (i in 0 .. dailyAgendaState.slots.lastIndex) {
+            offsetMap.put(dailyAgendaState.slots[i], OffsetInfo())
+        }
+        offsetMap
     }
 
     dailyAgendaState.slotToEventMap.entries.forEach { entry ->
         val slot = entry.key
-        val numbersOfSlots = (slot.time - config.initialSlotValue) / config.slotUnit
+        val numbersOfSlots = (slot.time - config.initialSlotValue) * config.slotScale
         val offsetY = (numbersOfSlots * config.slotHeight).dp
 
         var offsetXAbsolute: Dp = 0.dp

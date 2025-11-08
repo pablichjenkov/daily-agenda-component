@@ -11,9 +11,10 @@ class DailyAgendaState(
     val config: Config
 )
 
-class Slot(
+data class Slot(
     val title: String,
     val time: Float,
+    val index: Int
 )
 
 // TODO: Change var with val SlotInfo.copy()
@@ -45,7 +46,7 @@ internal class OffsetInfo(
 
 sealed class Config(
     open val initialSlotValue: Float = 0.0F,
-    open val slotUnit: Float = 1F,
+    open val slotScale: Float = 1F,
     open val slotHeight: Int = 72,
     open val timelineLeftPadding: Int = 72
 ) {
@@ -53,7 +54,7 @@ sealed class Config(
     class MixedDirections(
         val eventWidthType: EventWidthType = EventWidthType.MaxVariableSize,
         override val initialSlotValue: Float,
-        override val slotUnit: Float,
+        override val slotScale: Float,
         override val slotHeight: Int,
         override val timelineLeftPadding: Int
     ) : Config()
@@ -61,7 +62,7 @@ sealed class Config(
     class LeftToRight(
         val lastEventFillRow: Boolean = true,
         override val initialSlotValue: Float,
-        override val slotUnit: Float,
+        override val slotScale: Float,
         override val slotHeight: Int,
         override val timelineLeftPadding: Int
     ) : Config()
@@ -69,7 +70,7 @@ sealed class Config(
     class RightToLeft(
         val lastEventFillRow: Boolean = true,
         override val initialSlotValue: Float,
-        override val slotUnit: Float,
+        override val slotScale: Float,
         override val slotHeight: Int,
         override val timelineLeftPadding: Int
     ) : Config()

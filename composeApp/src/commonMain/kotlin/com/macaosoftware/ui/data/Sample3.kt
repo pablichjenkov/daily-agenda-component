@@ -5,33 +5,32 @@ import com.macaosoftware.ui.dailyagenda.Slot
 
 class Sample3(private val slots: List<Slot>) {
 
-    val slotToEventMap: Map<Slot, List<Event>> = mapOf(
-        slots[0] to createEventsFor800AM(startSlot = slots[0]),
-        slots[1] to createEventsFor830AM(startSlot = slots[1]),
-        slots[2] to createEventsFor900AM(startSlot = slots[2]),
-        slots[3] to createEventsFor930AM(startSlot = slots[3]),
-        slots[4] to createEventsFor10_00AM(startSlot = slots[4]),
-        slots[5] to createEventsFor10_30AM(startSlot = slots[5]),
-        slots[6] to emptyList(),
-        slots[7] to emptyList(),
-        slots[8] to emptyList(),
-        slots[9] to emptyList(),
-        slots[10] to emptyList(),
-        slots[11] to emptyList(),
-        slots[12] to emptyList(),
-        slots[13] to emptyList(),
-        slots[14] to emptyList(),
-        slots[15] to emptyList(),
-        slots[16] to emptyList(),
-        slots[17] to emptyList(),
-        slots[18] to emptyList(),
-        slots[19] to emptyList(),
-        slots[20] to emptyList(),
-        slots[21] to emptyList(),
-        slots[22] to emptyList(),
-        slots[23] to emptyList(),
-        slots[24] to emptyList()
-    )
+    val slotToEventMap = mutableMapOf<Slot, List<Event>>()
+
+    init {
+        for (i in 0 .. slots.lastIndex) {
+            val slot = slots[i]
+            slotToEventMap[slot] = emptyList()
+        }
+
+        val slot8_00 = slots[8* Slots.slotScale]
+        slotToEventMap[slot8_00] = createEventsFor800AM(startSlot = slot8_00)
+
+        val slot8_30 = slots[8* Slots.slotScale + 1]
+        slotToEventMap[slot8_30] = createEventsFor830AM(startSlot = slot8_30)
+
+        val slot9_00 = slots[9* Slots.slotScale]
+        slotToEventMap[slot9_00] = createEventsFor900AM(startSlot = slot9_00)
+
+        val slot9_30 = slots[9* Slots.slotScale + 1]
+        slotToEventMap[slot9_30] = createEventsFor930AM(startSlot = slot9_30)
+
+        val slot10_00 = slots[10* Slots.slotScale]
+        slotToEventMap[slot10_00] = createEventsFor10_00AM(startSlot = slot10_00)
+
+        val slot10_30 = slots[10* Slots.slotScale + 1]
+        slotToEventMap[slot10_30] = createEventsFor10_30AM(startSlot = slot10_30)
+    }
 
     private fun createEventsFor800AM(startSlot: Slot): List<Event> {
         return listOf(
