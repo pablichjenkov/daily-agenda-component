@@ -10,19 +10,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.macaosoftware.ui.dailyagenda.DailyAgendaStateController
 import com.macaosoftware.ui.dailyagenda.DailyAgendaView
-import com.macaosoftware.ui.dailyagenda.SlotsGenerator
+import com.macaosoftware.ui.dailyagenda.DecimalSlotsGenerator
+import com.macaosoftware.ui.dailyagenda.TimeLineSlotsGenerator
+import com.macaosoftware.ui.data.DemoConfigurations
 import com.macaosoftware.ui.data.Sample0
-import com.macaosoftware.ui.data.Sample1
-import com.macaosoftware.ui.data.Sample2
 import com.macaosoftware.ui.data.Sample3
-import com.macaosoftware.ui.data.Slots
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
@@ -37,11 +35,13 @@ fun App() {
                     .padding(paddingValues = innerPadding)
             ) {
                 val stateController = remember {
-                    val slotsGenerator = SlotsGenerator()
+                    val slotsGenerator = TimeLineSlotsGenerator()
+                    val demoConfigurations = DemoConfigurations(slotsGenerator)
+
                     DailyAgendaStateController(
                         slotsGenerator = slotsGenerator,
-                        slotToEventMap = Sample0(slotsGenerator = slotsGenerator).slotToEventMap,
-                        config = Slots.demoConfigLTR
+                        slotToEventMap = Sample3(slotsGenerator = slotsGenerator).slotToEventMap,
+                        config = demoConfigurations.demoConfigLTR
                     )
                 }
 
@@ -78,11 +78,13 @@ private fun generateRandomColor(): Color {
 @Composable
 fun CalendarViewPreview() {
     val stateController = remember {
-        val slotsGenerator = SlotsGenerator()
+        val slotsGenerator = DecimalSlotsGenerator()
+        val demoConfigurations = DemoConfigurations(slotsGenerator)
+
         DailyAgendaStateController(
             slotsGenerator = slotsGenerator,
             slotToEventMap = Sample0(slotsGenerator = slotsGenerator).slotToEventMap,
-            config = Slots.demoConfigLTR
+            config = demoConfigurations.demoConfigLTR
         )
     }
     stateController.state.value?.let { dailyAgendaState ->

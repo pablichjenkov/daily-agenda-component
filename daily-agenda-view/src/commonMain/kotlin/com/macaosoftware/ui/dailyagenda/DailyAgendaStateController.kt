@@ -10,6 +10,8 @@ class DailyAgendaStateController(
 
     private val slots = slotsGenerator.slots
     private val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
+
+    // TODO: Make this non nullable by selecting a good default value
     val state = mutableStateOf<DailyAgendaState?>(null)
 
     init {

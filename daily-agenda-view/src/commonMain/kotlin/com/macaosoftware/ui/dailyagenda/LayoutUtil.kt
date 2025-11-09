@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.max
 /**
  * Returns the Event Y axis offset in Dp from the slot start time.
  * */
-fun getEventTranslationInSlot(event: Event, config: Config): Dp {
+internal fun getEventTranslationInSlot(event: Event, config: Config): Dp {
     val fractionOfSlots = (event.startTime - event.startSlot.time) * config.slotScale
     return (fractionOfSlots * config.slotHeight).dp
 }
@@ -15,7 +15,7 @@ fun getEventTranslationInSlot(event: Event, config: Config): Dp {
 /**
  * Returns the height in Dp for a given Event based on the amount of slots it touches.
  * */
-fun getEventHeight(event: Event, config: Config): Dp {
+internal fun getEventHeight(event: Event, config: Config): Dp {
     val numberOfSlots = (event.endTime - event.startTime) * config.slotScale
     return (numberOfSlots * config.slotHeight).dp
 }
@@ -45,7 +45,7 @@ private fun getMaximumNumberOfSiblingsInContainingSlots(
 /**
  * Returns a list of the slots touched by the given event. Including its own start slot.
  * */
-fun getSlotsIncludeStartSlot(
+internal fun getSlotsIncludeStartSlot(
     event: Event,
     slots: List<Slot>
 ): List<Slot> {
@@ -54,7 +54,7 @@ fun getSlotsIncludeStartSlot(
     val containingSlots = mutableListOf<Slot>()
     eventSlots.forEach { slot ->
         println("LayoutUtil: Checking slot: ${slot.title}")
-        if (event.endTime > slot.time + 0.1) {
+        if (event.endTime > slot.time + 0.0001) {
             println("LayoutUtil: slot: ${slot.title} contains event: ${event.title}")
             containingSlots.add(slot)
         }
@@ -65,7 +65,7 @@ fun getSlotsIncludeStartSlot(
 /**
  * Returns a list of the slots touched by the given event. Excluding its own start slot.
  * */
-fun getSlotsIgnoreStartSlot(
+internal fun getSlotsIgnoreStartSlot(
     dailyAgendaState: DailyAgendaState,
     event: Event
 ): List<Slot> {
@@ -73,7 +73,7 @@ fun getSlotsIgnoreStartSlot(
     val laterSlots = dailyAgendaState.slots.subList(slotIndex + 1, dailyAgendaState.slots.size)
     val containingSlots = mutableListOf<Slot>()
     laterSlots.forEach { slot ->
-        if (event.endTime > slot.time + 0.1) {
+        if (event.endTime > slot.time + 0.0001) {
             println("LayoutUtil: slot: ${slot.title} contains event: ${event.title}")
             containingSlots.add(slot)
         }

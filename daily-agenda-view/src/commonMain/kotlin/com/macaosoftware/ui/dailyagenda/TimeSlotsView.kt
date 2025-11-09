@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun SlotsLayer(dailyAgendaState: DailyAgendaState) {
+internal fun SlotsLayer(dailyAgendaState: DailyAgendaState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -26,7 +26,7 @@ fun SlotsLayer(dailyAgendaState: DailyAgendaState) {
 }
 
 @Composable
-fun SlotLine(slot: Slot, config: Config) {
+private fun SlotLine(slot: Slot, config: Config) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,5 +40,4 @@ fun SlotLine(slot: Slot, config: Config) {
         )
         Text(text = slot.title)
     }
-
 }

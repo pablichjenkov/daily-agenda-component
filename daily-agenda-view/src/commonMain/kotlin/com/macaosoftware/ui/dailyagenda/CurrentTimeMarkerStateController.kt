@@ -11,7 +11,7 @@ import kotlin.time.ExperimentalTime
 
 data class  CurrentTimeMarkerState(val offsetY: Dp)
 
-class CurrentTimeMarkerStateController(
+internal  class CurrentTimeMarkerStateController(
     val dailyAgendaState: DailyAgendaState
 ) {
 

@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 
 @Composable
-fun RtlCustomRow(
+internal fun RtlCustomRow(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
