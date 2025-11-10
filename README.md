@@ -33,6 +33,7 @@ Use cases:
 
 |Agenda Version|Kotlin Version|
 |--|--|
+|0.6.0|2.2.21|
 |0.5.0|2.2.21|
 |0.4.0|2.2.21|
 
@@ -53,6 +54,26 @@ sourceSets {
 }
 ```
 
+<BR/>
+
+Lets create a helper class to build the initial events data.
+
+```kotlin
+class SampleDataBuilder(slotsGenerator: SlotsGenerator) {
+  val slotToEventMap = mutableMapOf<Slot, List<Event>>() // A Map<Slot, List<Event>> is the data structure which DailyAgendaView will render.
+  val slot8_00 = slotsGenerator.getSlotForTime(8.0F) // Get a slot for the specific time you want to add an event. In this case 8.00 AM
+
+  // This adds two event in the 8:00 AM slot
+  slotToEventMap[slot8_00] =  
+    listOf(
+        Event(startSlot = startSlot, title = "Ev 1", startTime = 8.0F, endTime = 12.0F),
+        Event(startSlot = startSlot, title = "Ev 2", startTime = 8.0F, endTime = 10.0F)
+    )
+}
+```
+
+<BR/>
+
 Then add a **DailyAgendaView** in your Composable function like in the code snippet bellow:
 
 ```kotlin
@@ -62,7 +83,7 @@ fun Box(modifier = Modifier.fillMaxSize()) {
   val dailyAgendaStateController = remember {
     val slotsGenerator = TimeLineSlotsGenerator()
     val demoConfigurations = DemoConfigurations(slotsGenerator)
-    val slotToEventMap = Sample3(slotsGenerator = slotsGenerator).slotToEventMap // Check Sample3 class in the demo, to see how to create the events timeline
+    val slotToEventMap = SampleDataBuilder(slotsGenerator = slotsGenerator).slotToEventMap // See Sample0 .. Sample3 classes in the composeApp module for more detail
 
     DailyAgendaStateController(
         slotsGenerator = slotsGenerator,
