@@ -12,7 +12,7 @@ class DailyAgendaStateController(
     private val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
 
     // TODO: Make this non nullable by selecting a good default value
-    val state = mutableStateOf<DailyAgendaState?>(null)
+    val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
 
     init {
         /**
@@ -93,20 +93,23 @@ class DailyAgendaStateController(
         } else false
     }
 
-    private fun updateState() {
-        // Precompute some measurement and layout info aot for performance
+    private fun computeNextState(): DailyAgendaState {
         val result = computeSlotInfo(
             slots = slots,
             slotToEventMap = slotToEventMapSorted,
             config = config
         )
-        state.value = DailyAgendaState(
+        return DailyAgendaState(
             slots = slots,
             slotToEventMap = slotToEventMapSorted,
             slotInfoMap = result.slotInfoMap,
             maxColumns = result.maxColumns,
             config = config
         )
+    }
+
+    private fun updateState() {
+        state.value = computeNextState()
     }
 
     /**

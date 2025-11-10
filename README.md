@@ -70,18 +70,16 @@ fun Box(modifier = Modifier.fillMaxSize()) {
         config = demoConfigurations.demoConfigMixedDirections
     )
   }
-
-  dailyAgendaStateController.state.value?.let { dailyAgendaState ->
-    DailyAgendaView(dailyAgendaState = dailyAgendaState) { event ->
+    
+  DailyAgendaView(dailyAgendaState = dailyAgendaStateController.state.value) { event ->
         Box(
             modifier =
                 Modifier.fillMaxSize().padding(2.dp).background(color = Color.LightGray)
         ) {
-            Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
+            Text(text = "${event.title}: ${event.startTime}-${event.endTime}") 
         }
-    }
   }
-
+    
 }
 ```
 

@@ -44,18 +44,15 @@ fun App() {
                         config = demoConfigurations.demoConfigLTR
                     )
                 }
-
-                stateController.state.value?.let { dailyAgendaState ->
-                    DailyAgendaView(
-                        dailyAgendaState = dailyAgendaState
-                    ) { event ->
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                                .padding(2.dp)
-                                .background(color = generateRandomColor())
-                        ) {
-                            Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
-                        }
+                DailyAgendaView(
+                    dailyAgendaState = stateController.state.value
+                ) { event ->
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(2.dp)
+                            .background(color = generateRandomColor())
+                    ) {
+                        Text(text = "${event.title}: ${event.startTime}-${event.endTime}")
                     }
                 }
             }
@@ -64,13 +61,11 @@ fun App() {
 }
 
 private fun generateRandomColor(): Color {
-    val red =
-        Random.nextInt(256) // Generates a random integer between 0 (inclusive) and 256 (exclusive)
+    val red = Random.nextInt(256)
     val green = Random.nextInt(256)
     val blue = Random.nextInt(256)
     return Color(red, green, blue)
 }
-
 
 @Preview(
     showBackground = true
