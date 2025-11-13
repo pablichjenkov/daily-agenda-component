@@ -15,16 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.macaosoftware.ui.dailyagenda.DailyAgendaStateController
 import com.macaosoftware.ui.dailyagenda.DailyAgendaView
-import com.macaosoftware.ui.dailyagenda.DecimalSlotsController
+import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
+import com.macaosoftware.ui.dailyagenda.EventWidthType
 import com.macaosoftware.ui.dailyagenda.EventsArrangement
-import com.macaosoftware.ui.dailyagenda.EventsManager
 import com.macaosoftware.ui.dailyagenda.SlotConfig
-import com.macaosoftware.ui.dailyagenda.TimeLineSlotsController
+import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
 import com.macaosoftware.ui.dailyagenda.toLocalTimeEvent
 import com.macaosoftware.ui.data.Sample0
-import com.macaosoftware.ui.data.Sample3
+import com.macaosoftware.ui.data.Sample1
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
@@ -39,18 +38,25 @@ fun App() {
                     .padding(paddingValues = innerPadding)
             ) {
                 val stateController = remember {
-                    val slotConfig = SlotConfig(slotScale = 4, slotHeight = 32)
-                    val slotsController = TimeLineSlotsController(slotConfig = slotConfig)
-                    val eventsManager = EventsManager(slotsController = slotsController)
+                    val slotConfig = SlotConfig(slotScale = 1, slotHeight = 102)
+                    val timeSlotsStateController = TimeSlotsStateController(slotConfig = slotConfig)
 
                     // Prepare the initial data
-                    Sample0(eventsManager = eventsManager)
-
-                    DailyAgendaStateController(
-                        eventsManager = eventsManager,
-                        eventsArrangement = EventsArrangement.LeftToRight()
-                    )
+                    Sample0(timeSlotsStateController = timeSlotsStateController)
+                    timeSlotsStateController
                 }
+//                val stateController = remember {
+//                    val slotConfig = SlotConfig(slotScale = 2)
+//                    val decimalSlotsStateController =
+//                        DecimalSlotsStateController(
+//                            slotConfig = slotConfig,
+//                            eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.MaxVariableSize)
+//                        )
+//
+//                    // Prepare the initial data
+//                    Sample1(decimalSlotsStateController = decimalSlotsStateController)
+//                    decimalSlotsStateController
+//                }
                 DailyAgendaView(
                     dailyAgendaState = stateController.state.value
                 ) { event ->
@@ -59,11 +65,19 @@ fun App() {
                             .padding(all = 2.dp)
                             .background(color = generateRandomColor())
                     ) {
-                        val localTimeEvent = event.toLocalTimeEvent()
-                        Text(
-                            text = "${event.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
-                            fontSize = 12.sp
-                        )
+                        if (stateController is TimeSlotsStateController) {
+                            val localTimeEvent = event.toLocalTimeEvent()
+                            Text(
+                                text = "${event.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
+                                fontSize = 12.sp
+                            )
+                        } else {
+                            Text(
+                                text = "${event.title}: ${event.startValue}-${event.endValue}",
+                                fontSize = 12.sp
+                            )
+                        }
+
                     }
                 }
             }
@@ -84,17 +98,13 @@ private fun generateRandomColor(): Color {
 @Composable
 fun CalendarViewPreview() {
     val stateController = remember {
-        val demoSlotConfiguration = SlotConfig()
-        val slotsController = DecimalSlotsController(demoSlotConfiguration)
-        val eventsManager = EventsManager(slotsController = slotsController)
+        val slotConfig = SlotConfig(slotScale = 1, slotHeight = 72)
+        val decimalSlotsStateController = DecimalSlotsStateController(slotConfig = slotConfig)
 
         // Prepare the initial data
-        Sample0(eventsManager = eventsManager)
+        Sample1(decimalSlotsStateController = decimalSlotsStateController)
 
-        DailyAgendaStateController(
-            eventsManager = eventsManager,
-            eventsArrangement = EventsArrangement.MixedDirections()
-        )
+        decimalSlotsStateController
     }
     MaterialTheme {
         Box(modifier = Modifier.size(600.dp, 1000.dp)) {

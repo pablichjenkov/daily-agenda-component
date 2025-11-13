@@ -1,41 +1,44 @@
 package com.macaosoftware.ui.data
 
+import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.Event
-import com.macaosoftware.ui.dailyagenda.Slot
-import com.macaosoftware.ui.dailyagenda.SlotsController
 
-class Sample1(slotsController: SlotsController) {
-
-    val slots: List<Slot> = slotsController.slots
-    val slotToEventMap = mutableMapOf<Slot, List<Event>>()
+class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
 
     init {
-        for (i in 0 .. slots.lastIndex) {
-            val slot = slots[i]
-            slotToEventMap[slot] = emptyList()
+        decimalSlotsStateController.decimalSlotsDataUpdater.run {
+            addDecimalSegmentList(
+                startValue = 8.0F,
+                segments = createSegmentsFor8()
+            )
+            addDecimalSegmentList(
+                startValue = 8.5F,
+                segments = createEventsFor8_5()
+            )
+            addDecimalSegmentList(
+                startValue = 9.0F,
+                segments = createEventsFor9()
+            )
+            addDecimalSegmentList(
+                startValue = 9.5F,
+                segments = createEventsFor9_5()
+            )
+            addDecimalSegmentList(
+                startValue = 10.0F,
+                segments = createEventsFor10()
+            )
+            addDecimalSegmentList(
+                startValue = 10.5F,
+                segments = createEventsFor10_5()
+            )
+
+            // Flush all the changes
+            commit()
         }
-
-        val slot8_00 = slotsController.getSlotForValue(8.0F)
-        slotToEventMap[slot8_00] = createEventsFor800AM(startSlot = slot8_00)
-
-        val slot8_30 = slotsController.getSlotForValue(8.5F)
-        slotToEventMap[slot8_30] = createEventsFor830AM(startSlot = slot8_30)
-
-        val slot9_00 = slotsController.getSlotForValue(9.0F)
-        slotToEventMap[slot9_00] = createEventsFor900AM(startSlot = slot9_00)
-
-        val slot9_30 = slotsController.getSlotForValue(9.5F)
-        slotToEventMap[slot9_30] = createEventsFor930AM(startSlot = slot9_30)
-
-        val slot10_00 = slotsController.getSlotForValue(10.0F)
-        slotToEventMap[slot10_00] = createEventsFor10_00AM(startSlot = slot10_00)
-
-        val slot10_30 = slotsController.getSlotForValue(10.5F)
-        slotToEventMap[slot10_30] = createEventsFor10_30AM(startSlot = slot10_30)
     }
 
-    fun createEventsFor800AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createSegmentsFor8(): List<Event> {
+        return listOf(
             Event(
                 title = "Ev 1",
                 startValue = 8.0F,
@@ -64,8 +67,8 @@ class Sample1(slotsController: SlotsController) {
         )
     }
 
-    fun createEventsFor830AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createEventsFor8_5(): List<Event> {
+        return listOf(
             Event(
                 title = "Evt 6",
                 startValue = 8.5F,
@@ -84,8 +87,8 @@ class Sample1(slotsController: SlotsController) {
         )
     }
 
-    fun createEventsFor900AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createEventsFor9(): List<Event> {
+        return listOf(
             Event(
                 title = "Evt 9",
                 startValue = 9.0F,
@@ -99,8 +102,8 @@ class Sample1(slotsController: SlotsController) {
         )
     }
 
-    fun createEventsFor930AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createEventsFor9_5(): List<Event> {
+        return listOf(
             Event(
                 title = "Evt 11",
                 startValue = 9.5F,
@@ -120,12 +123,22 @@ class Sample1(slotsController: SlotsController) {
                 title = "Evt 14",
                 startValue = 9.5F,
                 endValue = 10.0F
+            ),
+            Event(
+                title = "Evt 14",
+                startValue = 9.5F,
+                endValue = 10.0F
+            ),
+            Event(
+                title = "Evt 14",
+                startValue = 9.5F,
+                endValue = 10.0F
             )
         )
     }
 
-    fun createEventsFor10_00AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createEventsFor10(): List<Event> {
+        return listOf(
             Event(
                 title = "Evt 15",
                 startValue = 10.0F,
@@ -144,8 +157,8 @@ class Sample1(slotsController: SlotsController) {
         )
     }
 
-    fun createEventsFor10_30AM(startSlot: Slot): List<Event> {
-        return slotToEventMap[startSlot]!! + listOf(
+    private fun createEventsFor10_5(): List<Event> {
+        return listOf(
             Event(
                 title = "Evt 18",
                 startValue = 10.5F,

@@ -2,7 +2,7 @@ package com.macaosoftware.ui.data
 
 import com.macaosoftware.ui.dailyagenda.Event
 import com.macaosoftware.ui.dailyagenda.Slot
-import com.macaosoftware.ui.dailyagenda.SlotsController
+/*
 
 class Sample3(slotsController: SlotsController) {
 
@@ -185,3 +185,4 @@ class Sample3(slotsController: SlotsController) {
     }
 
 }
+*/

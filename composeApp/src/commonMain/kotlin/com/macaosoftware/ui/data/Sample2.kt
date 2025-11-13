@@ -2,8 +2,7 @@ package com.macaosoftware.ui.data
 
 import com.macaosoftware.ui.dailyagenda.Event
 import com.macaosoftware.ui.dailyagenda.Slot
-import com.macaosoftware.ui.dailyagenda.SlotsController
-
+/*
 class Sample2(slotsController: SlotsController) {
 
     val slots: List<Slot> = slotsController.slots
@@ -160,3 +159,4 @@ class Sample2(slotsController: SlotsController) {
     }
 
 }
+*/

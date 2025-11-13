@@ -64,10 +64,7 @@ sealed interface EventsArrangement {
 
     class MixedDirections(
         val eventWidthType: EventWidthType = EventWidthType.MaxVariableSize,
-    ) : EventsArrangement {
-
-        enum class EventWidthType { MaxVariableSize, FixedSize, FixedSizeFillLastEvent }
-    }
+    ) : EventsArrangement
 
     class LeftToRight(
         val lastEventFillRow: Boolean = true
@@ -77,3 +74,5 @@ sealed interface EventsArrangement {
         val lastEventFillRow: Boolean = true
     ) : EventsArrangement
 }
+
+enum class EventWidthType { MaxVariableSize, FixedSize, FixedSizeFillLastEvent }

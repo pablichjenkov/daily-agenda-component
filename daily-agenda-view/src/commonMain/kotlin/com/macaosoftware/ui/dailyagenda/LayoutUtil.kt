@@ -208,9 +208,9 @@ private fun shouldReturnMinimumAllowedWidth(
 
         is EventsArrangement.MixedDirections -> {
             return when (eventsArrangement.eventWidthType) {
-                EventsArrangement.MixedDirections.EventWidthType.MaxVariableSize -> false
-                EventsArrangement.MixedDirections.EventWidthType.FixedSize -> true
-                EventsArrangement.MixedDirections.EventWidthType.FixedSizeFillLastEvent -> !event.isSingleSlot()
+                EventWidthType.MaxVariableSize -> false
+                EventWidthType.FixedSize -> true
+                EventWidthType.FixedSizeFillLastEvent -> !event.isSingleSlot()
             }
 
         }

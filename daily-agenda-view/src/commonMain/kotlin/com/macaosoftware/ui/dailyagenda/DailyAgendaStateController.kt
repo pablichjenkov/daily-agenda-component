@@ -1,109 +1,52 @@
 package com.macaosoftware.ui.dailyagenda
 
 import androidx.compose.runtime.mutableStateOf
+import kotlin.math.abs
 
-class DailyAgendaStateController(
-    eventsManager: EventsManager,
+private const val HOURS_IN_ONE_DAY = 24
+
+abstract class DailyAgendaStateController(
+    private val slotConfig: SlotConfig,
     private val eventsArrangement: EventsArrangement
 ) {
 
-    private val slotToEventMap: Map<Slot, List<Event>> = eventsManager.slotToEventMap
-    private val slotsController: SlotsController = eventsManager.slotsController
+    val slotScale = slotConfig.slotScale
+    val slotHeight = slotConfig.slotHeight
+    val slotUnit = 1.0F / slotScale
+    val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
+
+
+    private val amountOfSlotsInOneDay = (HOURS_IN_ONE_DAY) * slotScale
+    val slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay)
+
+    val firstSlot = slots[0]
+
+    // val InitialslotToEventMap: MutableMap<Slot, List<Event>> = mutableMapOf()
+
     private val config = Config(
         eventsArrangement = eventsArrangement,
-        initialSlotValue = slotsController.firstSlot.value,
-        slotScale = slotsController.slotScale,
-        slotHeight = slotsController.slotHeight,
+        initialSlotValue = firstSlot.value,
+        slotScale = slotScale,
+        slotHeight = slotHeight,
         timelineLeftPadding = 72
     )
-    private val slots = slotsController.slots
-    private val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
 
-    init {
-        /**
-         * Sort the events to maximize spacing when the layout runs.
-         * */
-        val endTimeComparator = Comparator { event1: Event, event2: Event ->
-            val diff = event2.endValue - event1.endValue
-            when {
-                (diff > 0F) -> 1
-                (diff < 0F) -> -1
-                else -> 0
-            }
-        }
-        slotToEventMap.entries.forEach { entry ->
-            val eventsSortedByEndTime = entry.value.sortedWith(endTimeComparator).toMutableList()
-            slotToEventMapSorted.put(entry.key, eventsSortedByEndTime)
-        }
-    }
+    internal val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
 
-    /**
-     * This have to be declared after init{} execution. To guarantee that there is data in the
-     * slotToEventMapSorted and that the events are sorted.
-     */
     val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
 
-    fun addEvent(
-        startTime: Float,
-        endTime: Float,
-        title: String
-    ): Boolean {
-        val eventSlot = slotsController.getSlotForValue(startValue = startTime)
-        val siblingEvents = slotToEventMapSorted[eventSlot]?.toMutableList() ?: return false
+    protected abstract fun createSlots(firstSlotIndex: Int, amountOfSlotsInOneDay: Int): List<Slot>
 
-        val index = siblingEvents.binarySearch(fromIndex = 0, toIndex = siblingEvents.lastIndex) {
-            val diff = it.endValue - endTime
-            when {
-                (diff > 0F) -> 1
-                (diff < 0F) -> -1
-                else -> 0
-            }
-        }
-        val insertionIndex = if (index < 0) -(index + 1) else index
-        siblingEvents.add(
-            insertionIndex,
-            Event(
-                startValue = startTime,
-                endValue = endTime,
-                title = title
-            )
-        )
-
-        // Update state
-        updateState()
-        return true
+    init {
+        slots.forEach { slotToEventMapSorted.put(it, mutableListOf()) }
     }
 
-    fun addEvent(event: Event): Boolean {
-        val eventSlot = slotsController.getSlotForValue(startValue = event.startValue)
-        val siblingEvents = slotToEventMapSorted[eventSlot]?.toMutableList() ?: return false
-
-        val index = siblingEvents.binarySearch(fromIndex = 0, toIndex = siblingEvents.lastIndex) {
-            val diff = it.endValue - event.endValue
-            when {
-                (diff > 0F) -> 1
-                (diff < 0F) -> -1
-                else -> 0
-            }
-        }
-        val insertionIndex = if (index < 0) -(index + 1) else index
-        siblingEvents.add(insertionIndex, event)
-
-        // Update state
-        updateState()
-        return true
+    fun getSlotForValue(startValue: Float): Slot {
+        return slots.find { abs(x = startValue - it.value) < slotUnit }
+            ?: error("startTime: $startValue must be between 0.0 and 24.0")
     }
 
-    fun removeEvent(event: Event): Boolean {
-        val eventSlot = slotsController.getSlotForValue(startValue = event.startValue)
-        val siblingEvents = slotToEventMapSorted[eventSlot]?.toMutableList() ?: return false
-        return if (siblingEvents.remove(event)) { // Update only if removal was success
-            updateState()
-            true
-        } else false
-    }
-
-    private fun computeNextState(): DailyAgendaState {
+    internal fun computeNextState(): DailyAgendaState {
         val result = computeSlotInfo(
             slots = slots,
             slotToEventMap = slotToEventMapSorted,
@@ -118,7 +61,7 @@ class DailyAgendaStateController(
         )
     }
 
-    private fun updateState() {
+    internal fun updateState() {
         state.value = computeNextState()
     }
 
@@ -149,7 +92,7 @@ class DailyAgendaStateController(
 
             slotToEventMap[slotIter]?.forEachIndexed { idx, event ->
 
-                val eventSlot = slotsController.getSlotForValue(startValue = event.startValue)
+                val eventSlot = getSlotForValue(startValue = event.startValue)
 
                 getSlotsIncludeStartSlot(event, eventSlot, slots).forEach { containingSlot ->
                     // Update column mark
