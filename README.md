@@ -31,7 +31,7 @@ Use cases:
   </td>
   <td>
 
-|Agenda Version|Kotlin Version| CMP Version |
+| Agenda Version | Kotlin Version | CMP Version |
 |--|--|--|
 |0.8.0|2.2.21|1.9.3|
 |0.7.0|2.2.21|1.9.2|
@@ -53,6 +53,15 @@ sourceSets {
 }
 ```
 
+In Android specific projects that use java time or joda time it is necessary to include the kotlinx-datetime dependecy too. So gradle will look like bellow.
+
+```kotlin
+dependencies {
+    implementation("io.github.pablichjenkov:daily-agenda-view:<latest-version>")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+}
+```
+
 <BR/>
 
 The first thing you need is a StateController. You have to pick between DecimalSlotsStateController and
@@ -61,21 +70,36 @@ for hour and minute axis. See bellow
 ```kotlin
 val timeSlotsStateController = remember {
     TimeSlotsStateController(
-        timeSlotConfig = TimeSlotConfig(slotScale = 2, slotHeight = 48),
-        eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
-    ).apply {
-        timeSlotsDataUpdater.addEvent(
-            startTime = LocalTime(hour = 8, minute = 0),
-            endTime = LocalTime(hour = 8, minute = 30),
-            title = "Event 0"
+            timeSlotConfig = TimeSlotConfig(slotScale = 2, slotHeight = 48),
+            eventsArrangement =
+                EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
         )
-        timeSlotsDataUpdater.addEventList(
-            startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
-            events = createLocalTimeEventsFor800AM() // Pass a list of events here in the same slot
-        )
-        timeSlotsDataUpdater.commit()
-    }
+        .apply {
+            timeSlotsDataUpdater.addEvent(
+                startTime = LocalTime(hour = 8, minute = 0),
+                endTime = LocalTime(hour = 8, minute = 30),
+                title = "Event 0"
+            )
+            timeSlotsDataUpdater.addEventList(
+                startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
+                events =
+                    listOf(
+                        LocalTimeEvent(
+                            startTime = LocalTime(hour = 8, minute = 0),
+                            endTime = LocalTime(hour = 8, minute = 45),
+                            title = "Event 1"
+                        ),
+                        LocalTimeEvent(
+                            startTime = LocalTime(hour = 8, minute = 0),
+                            endTime = LocalTime(hour = 9, minute = 0),
+                            title = "Event 2"
+                        )
+                    )
+            )
+            timeSlotsDataUpdater.commit()
+        }
 }
+
 ```
 
 <BR/>
@@ -85,18 +109,15 @@ in your Composable function:
 
 ```kotlin
 @Composable
-fun Box(modifier = Modifier.fillMaxSize()) {
+fun MySchedule(modifier = Modifier.fillMaxSize()) {
 
     val timeSlotsStateController = remember { ... }
 
     TimeSlotsView(timeSlotsStateController = timeSlotsStateController) { localTimeEvent ->
-        Box(
-            modifier = Modifier.fillMaxSize()
-                .padding(all = 2.dp)
-                .background(color = generateRandomColor())
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(all = 2.dp).background(color = Color.Gray)) {
             Text(
-                text = "${localTimeEvent.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
+                text =
+                    "${localTimeEvent.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
                 fontSize = 12.sp
             )
         }
@@ -106,7 +127,7 @@ fun Box(modifier = Modifier.fillMaxSize()) {
 
 Above code is all you need to have a daily events timeline added to your App. Bellow is a showcase of the different layout configurations the component offers. 
 
-**1.** The default configuration if you don't specify any. In this mode the agenda view will try to maximize the events witdh. It achieves that by mixing the rows layout direction. **Even rows** are rendered from left to right while **odd rows** are rendered from right to left. Since the events are order by duration, this mode leverage the maximum space available by laying out in the opposite direction from the previous road. It should be very effective in most data use cases.
+**1.** In this mode the agenda view will try to maximize the events witdh. It achieves that by mixing the rows layout direction. **Even rows** are rendered from left to right while **odd rows** are rendered from right to left. Since the events are order by duration, this mode leverage the maximum space available by laying out in the opposite direction from the previous road. It should be very effective in most data use cases.
 
 ```kotlin
 eventsArrangement = EventsArrangement.MixedDirections(eventWidthType = EventWidthType.VariableSize)
@@ -126,7 +147,7 @@ eventsArrangement = EventsArrangement.MixedDirections(eventWidthType = EventWidt
 
 ---
 
-**3.** This mode is just like number 2 but expand the single slot events to occupy the full row available width.
+**3.** This mode is just like number 2 but expand the single slot events to occupy the full row available width. This is the default configuration if you don't specify any.
 
 ```kotlin
 eventsArrangement = EventsArrangement.MixedDirections(eventWidthType = EventWidthType.FixedSizeFillLastEvent)
