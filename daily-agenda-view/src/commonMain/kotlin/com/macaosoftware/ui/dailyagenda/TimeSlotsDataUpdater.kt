@@ -3,11 +3,10 @@ package com.macaosoftware.ui.dailyagenda
 import kotlinx.datetime.LocalTime
 
 class TimeSlotsDataUpdater(
-    timeSlotsStateController: TimeSlotsStateController
+    dailyAgendaStateController: DailyAgendaStateController
 ) {
 
-    private val decimalSlotsDataUpdater =
-        DecimalSlotsDataUpdater(decimalSlotsStateController = timeSlotsStateController)
+    private val decimalSlotsDataUpdater = DecimalSlotsDataUpdater(dailyAgendaStateController)
 
     fun addEvent(
         startTime: LocalTime,

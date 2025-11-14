@@ -3,31 +3,20 @@ package com.macaosoftware.ui.dailyagenda
 import androidx.compose.runtime.mutableStateOf
 import kotlin.math.abs
 
-private const val HOURS_IN_ONE_DAY = 24
-
-abstract class DailyAgendaStateController(
-    private val slotConfig: SlotConfig,
+class DailyAgendaStateController(
+    val slots: List<Slot>,
+    slotConfig: SlotConfig,
     private val eventsArrangement: EventsArrangement
 ) {
 
-    val slotScale = slotConfig.slotScale
-    val slotHeight = slotConfig.slotHeight
-    val slotUnit = 1.0F / slotScale
-    val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
-
-
-    private val amountOfSlotsInOneDay = (HOURS_IN_ONE_DAY) * slotScale
-    val slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay)
-
-    val firstSlot = slots[0]
-
-    // val InitialslotToEventMap: MutableMap<Slot, List<Event>> = mutableMapOf()
+    val slotUnit = 1.0F / slotConfig.slotScale
 
     private val config = Config(
         eventsArrangement = eventsArrangement,
-        initialSlotValue = firstSlot.value,
-        slotScale = slotScale,
-        slotHeight = slotHeight,
+        initialSlotValue = slots[0].value,
+        lastSlotValue = slots[slots.lastIndex].value,
+        slotScale = slotConfig.slotScale,
+        slotHeight = slotConfig.slotHeight,
         timelineLeftPadding = 72
     )
 
@@ -35,15 +24,13 @@ abstract class DailyAgendaStateController(
 
     val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
 
-    protected abstract fun createSlots(firstSlotIndex: Int, amountOfSlotsInOneDay: Int): List<Slot>
-
     init {
         slots.forEach { slotToEventMapSorted.put(it, mutableListOf()) }
     }
 
     fun getSlotForValue(startValue: Float): Slot {
         return slots.find { abs(x = startValue - it.value) < slotUnit }
-            ?: error("startTime: $startValue must be between 0.0 and 24.0")
+            ?: error("startTime: $startValue must be between ${config.initialSlotValue} and ${config.lastSlotValue}")
     }
 
     internal fun computeNextState(): DailyAgendaState {
@@ -147,6 +134,7 @@ abstract class DailyAgendaStateController(
         println("DailyAgendaState: maxColumns: $maxColumns")
         return ComputeSlotInfoResult(slotInfoMap, maxColumns)
     }
+
 }
 
 private class ComputeSlotInfoResult(

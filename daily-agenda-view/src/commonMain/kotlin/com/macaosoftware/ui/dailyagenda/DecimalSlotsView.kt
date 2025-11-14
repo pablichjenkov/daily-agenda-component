@@ -6,20 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun TimeSlotsView(
-    timeSlotsStateController: TimeSlotsStateController,
-    eventContentProvider: @Composable (event: LocalTimeEvent) -> Unit
+fun DecimalSlotsView(
+    decimalSlotsStateController: DecimalSlotsStateController,
+    eventContentProvider: @Composable (event: Event) -> Unit
 ) {
 
-    val dailyAgendaState = timeSlotsStateController.dailyAgendaStateController.state.value
+    val dailyAgendaState = decimalSlotsStateController.dailyAgendaStateController.state.value
     val scrollState = rememberScrollState()
-    val currentTimeMarkerStateController = remember {
-        CurrentTimeMarkerStateController(dailyAgendaState = dailyAgendaState)
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,13 +25,8 @@ fun TimeSlotsView(
             SlotsLayer(dailyAgendaState = dailyAgendaState)
             DailyAgendaRootLayout(
                 dailyAgendaState = dailyAgendaState,
-                eventContentProvider = { event ->
-                    // Intercept the event to apply the toLocalTimeEvent() transformation
-                    eventContentProvider.invoke(event.toLocalTimeEvent())
-                }
+                eventContentProvider = eventContentProvider
             )
-            CurrentTimeMarkerView(currentTimeMarkerStateController)
         }
     }
-
 }

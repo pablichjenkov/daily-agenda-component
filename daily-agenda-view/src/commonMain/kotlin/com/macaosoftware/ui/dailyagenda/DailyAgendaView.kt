@@ -20,32 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DailyAgendaView(
-    dailyAgendaState: DailyAgendaState,
-    eventContentProvider: @Composable (event: Event) -> Unit
-) {
-    val scrollState = rememberScrollState()
-    val currentTimeMarkerStateController = remember {
-        CurrentTimeMarkerStateController(dailyAgendaState = dailyAgendaState)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        Box {
-            SlotsLayer(dailyAgendaState = dailyAgendaState)
-            DailyAgendaRootLayout(
-                dailyAgendaState = dailyAgendaState,
-                eventContentProvider = eventContentProvider
-            )
-            CurrentTimeMarkerView(currentTimeMarkerStateController)
-        }
-    }
-}
-
-@Composable
-private fun DailyAgendaRootLayout(
+internal fun DailyAgendaRootLayout(
     dailyAgendaState: DailyAgendaState,
     eventContentProvider: @Composable (event: Event) -> Unit
 ) {

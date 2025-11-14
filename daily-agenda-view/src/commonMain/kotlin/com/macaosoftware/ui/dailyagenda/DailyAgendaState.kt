@@ -47,6 +47,7 @@ internal class OffsetInfo(
 
 data class SlotConfig(
     val initialSlotValue: Float = 0.0F,
+    val lastSlotValue: Float = 20.0F,
     val slotScale: Int = 2,
     val slotHeight: Int = 64,
     val timelineLeftPadding: Int = 72
@@ -55,6 +56,7 @@ data class SlotConfig(
 data class Config(
     val eventsArrangement: EventsArrangement = EventsArrangement.MixedDirections(),
     val initialSlotValue: Float,
+    val lastSlotValue: Float,
     val slotScale: Int,
     val slotHeight: Int,
     val timelineLeftPadding: Int
@@ -63,7 +65,7 @@ data class Config(
 sealed interface EventsArrangement {
 
     class MixedDirections(
-        val eventWidthType: EventWidthType = EventWidthType.MaxVariableSize,
+        val eventWidthType: EventWidthType = EventWidthType.FixedSizeFillLastEvent,
     ) : EventsArrangement
 
     class LeftToRight(

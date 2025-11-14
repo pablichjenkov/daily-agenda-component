@@ -33,7 +33,7 @@ private fun getMaximumNumberOfSiblingsInContainingSlots(
     dailyAgendaState: DailyAgendaState
 ): Int {
     val containingSlots = getSlotsIncludeStartSlot(event, eventSlot, dailyAgendaState.slots)
-    val maxNumberOfEvents = containingSlots.fold(initial = 1) { maxNumberOfEvents, slot ->
+    val maxNumberOfEvents = containingSlots.fold(initial = 0) { maxNumberOfEvents, slot ->
         val numberOfEvents = dailyAgendaState.slotInfoMap[slot]?.getTotalColumnSpans() ?: 0
         if (numberOfEvents > maxNumberOfEvents) {
             numberOfEvents

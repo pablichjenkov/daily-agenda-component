@@ -51,6 +51,14 @@ fun LocalTimeSlot.toSlot(): Slot {
     )
 }
 
+data class TimeSlotConfig(
+    val startSlotTime: LocalTime = LocalTime(0, 0),
+    val endSlotTime: LocalTime = LocalTime(23, 59),
+    val slotScale: Int = 2,
+    val slotHeight: Int = 48,
+    val timelineLeftPadding: Int = 72
+)
+
 internal fun fromLocalTimeToValue(localTime: LocalTime): Float {
     val minuteFraction = localTime.minute.toFloat() / MINUTES_IN_ONE_HOUR
     return localTime.hour.toFloat() + minuteFraction
@@ -85,4 +93,14 @@ fun fromDecimalValueToTimeText(
     val hourUnitsFormatted = hourUnits.takeIf { it != 0 } ?: slotStartValueInt
     val amPmSuffix = if (slotStartValue < 12F) HOUR_AM else HOUR_PM
     return "$hourUnitsFormatted:$minutesTwoDigitFormat:$amPmSuffix"
+}
+
+fun TimeSlotConfig.toSlotConfig() : SlotConfig {
+    return SlotConfig(
+        initialSlotValue = fromLocalTimeToValue(startSlotTime),
+        lastSlotValue = fromLocalTimeToValue(endSlotTime),
+        slotScale = slotScale,
+        slotHeight = slotHeight,
+        timelineLeftPadding = timelineLeftPadding
+    )
 }

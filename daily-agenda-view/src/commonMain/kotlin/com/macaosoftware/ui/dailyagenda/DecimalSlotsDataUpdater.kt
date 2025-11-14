@@ -1,7 +1,7 @@
 package com.macaosoftware.ui.dailyagenda
 
 open class DecimalSlotsDataUpdater(
-    private val decimalSlotsStateController: DecimalSlotsStateController
+    val dailyAgendaStateController: DailyAgendaStateController
 ) {
 
     private var isListOperation = false
@@ -12,9 +12,9 @@ open class DecimalSlotsDataUpdater(
         endValue: Float,
         title: String
     ): Boolean {
-        val eventSlot = decimalSlotsStateController.getSlotForValue(startValue = startValue)
+        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
         val siblingEvents =
-            decimalSlotsStateController.slotToEventMapSorted[eventSlot] ?: mutableListOf()
+            dailyAgendaStateController.slotToEventMapSorted[eventSlot] ?: mutableListOf()
 
         var insertionIndex = 0
         for (idx in 0..siblingEvents.lastIndex) {
@@ -44,7 +44,7 @@ open class DecimalSlotsDataUpdater(
 
     fun addDecimalSegmentList(startValue: Float, segments: List<Event>) {
         isListOperation = true
-        val slot = decimalSlotsStateController.getSlotForValue(startValue = startValue)
+        val slot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
 
         if (slotToEventMapSortedTemp.contains(slot)) {
             slotToEventMapSortedTemp[slot]!!.addAll(elements = segments)
@@ -54,9 +54,9 @@ open class DecimalSlotsDataUpdater(
     }
 
     fun removeEvent(event: Event): Boolean {
-        val eventSlot = decimalSlotsStateController.getSlotForValue(startValue = event.startValue)
+        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = event.startValue)
         val siblingEvents =
-            decimalSlotsStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
+            dailyAgendaStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
                 ?: return false
         return siblingEvents.remove(event)
     }
@@ -66,10 +66,10 @@ open class DecimalSlotsDataUpdater(
         if (isListOperation) {
             val slotToEventMapSortedMerge: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
 
-            for (slot in decimalSlotsStateController.slots) {
+            for (slot in dailyAgendaStateController.slots) {
                 val addedSegments: MutableList<Event>? = slotToEventMapSortedTemp[slot]
                 val existingSegments: MutableList<Event> =
-                    decimalSlotsStateController.slotToEventMapSorted[slot]!!
+                    dailyAgendaStateController.slotToEventMapSorted[slot]!!
 
                 if (addedSegments != null) {
                     addedSegments.addAll(existingSegments)
@@ -93,14 +93,14 @@ open class DecimalSlotsDataUpdater(
             slotToEventMapSortedMerge.entries.forEach { entry ->
                 val eventsSortedByEndTime =
                     entry.value.sortedWith(endTimeComparator).toMutableList()
-                decimalSlotsStateController.slotToEventMapSorted.put(
+                dailyAgendaStateController.slotToEventMapSorted.put(
                     entry.key,
                     eventsSortedByEndTime
                 )
             }
         }
 
-        decimalSlotsStateController.updateState()
+        dailyAgendaStateController.updateState()
     }
 
 }

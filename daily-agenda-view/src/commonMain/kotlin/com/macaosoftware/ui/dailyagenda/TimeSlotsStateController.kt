@@ -1,21 +1,32 @@
 package com.macaosoftware.ui.dailyagenda
 
 class TimeSlotsStateController(
-    slotConfig: SlotConfig = SlotConfig(),
+    timeSlotConfig: TimeSlotConfig = TimeSlotConfig(),
     eventsArrangement: EventsArrangement = EventsArrangement.MixedDirections()
-) : DecimalSlotsStateController(
-    slotConfig = slotConfig,
-    eventsArrangement = eventsArrangement
 ) {
 
-    val timeSlotsDataUpdater = TimeSlotsDataUpdater(timeSlotsStateController = this)
+    val slotConfig = timeSlotConfig.toSlotConfig()
+    val slotScale = slotConfig.slotScale
+    val slotHeight = slotConfig.slotHeight
+    val slotUnit = 1.0F / slotScale
+    val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
 
-    override fun createSlots(
+    private val amountOfSlotsInOneDay = (slotConfig.lastSlotValue * slotScale).toInt()
+
+    internal val dailyAgendaStateController = DailyAgendaStateController(
+        slotConfig = slotConfig,
+        slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
+        eventsArrangement = eventsArrangement
+    )
+
+    val timeSlotsDataUpdater = TimeSlotsDataUpdater(dailyAgendaStateController)
+
+    fun createSlots(
         firstSlotIndex: Int,
         amountOfSlotsInOneDay: Int
     ): List<Slot> {
         val slots = mutableListOf<Slot>()
-        for (i in firstSlotIndex until amountOfSlotsInOneDay) {
+        for (i in firstSlotIndex .. amountOfSlotsInOneDay) {
             val slotStartValue = i * slotUnit
             val title = fromDecimalValueToTimeText(slotStartValue)
 
