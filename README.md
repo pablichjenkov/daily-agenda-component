@@ -33,6 +33,7 @@ Use cases:
 
 | Agenda Version | Kotlin Version | CMP Version |
 |--|--|--|
+|1.0.0|2.2.21|1.9.3|
 |0.9.0|2.2.21|1.9.3|
 
   </td>
