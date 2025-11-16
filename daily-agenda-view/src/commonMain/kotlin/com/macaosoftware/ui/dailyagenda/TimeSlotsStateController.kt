@@ -1,7 +1,7 @@
 package com.macaosoftware.ui.dailyagenda
 
 class TimeSlotsStateController(
-    timeSlotConfig: TimeSlotConfig = TimeSlotConfig(),
+    val timeSlotConfig: TimeSlotConfig = TimeSlotConfig(),
     eventsArrangement: EventsArrangement = EventsArrangement.MixedDirections()
 ) {
 
@@ -28,7 +28,7 @@ class TimeSlotsStateController(
         val slots = mutableListOf<Slot>()
         for (i in firstSlotIndex .. amountOfSlotsInOneDay) {
             val slotStartValue = i * slotUnit
-            val title = fromDecimalValueToTimeText(slotStartValue)
+            val title = fromDecimalValueToTimeText(slotStartValue, timeSlotConfig.useAmPm)
 
             slots.add(
                 Slot(

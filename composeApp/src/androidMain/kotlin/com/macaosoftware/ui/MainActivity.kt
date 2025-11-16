@@ -12,13 +12,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            DayScheduleApp()
         }
     }
 }
 
 @Preview
 @Composable
-fun AppAndroidPreview() {
-    App()
+fun DayScheduleAppAndroidPreview() {
+    DayScheduleApp()
 }
