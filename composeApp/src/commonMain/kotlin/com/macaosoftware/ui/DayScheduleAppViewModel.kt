@@ -55,7 +55,7 @@ class DayScheduleAppViewModel {
             startLocalTime: LocalTime,
             endLocalTime: LocalTime
         ) {
-            // calendarEventOperationsState.value = CalendarEventOperationsState.Hidden
+            dismissInputForm()
             timeSlotsStateController.timeSlotsDataUpdater.run {
                 addEvent(
                     title = title,
@@ -70,8 +70,8 @@ class DayScheduleAppViewModel {
             calendarEventOperationsState.value = CalendarEventOperationsState.RemoveTimedEventRequested
         }
 
-        override fun removeTimeEvent() {
-
+        override fun confirmRemoveTimeEvent(eventTitle: String) {
+            dismissInputForm()
         }
 
         override fun showAddDecimalSegmentForm() {
@@ -83,9 +83,9 @@ class DayScheduleAppViewModel {
             startValue: Float,
             endValue: Float
         ) {
-            // calendarEventOperationsState.value = CalendarEventOperationsState.Hidden
+            dismissInputForm()
             decimalSlotsStateController.decimalSlotsDataUpdater.run {
-                addEvent(
+                addDecimalSegment(
                     title = title,
                     startValue = startValue,
                     endValue = endValue
@@ -98,8 +98,11 @@ class DayScheduleAppViewModel {
             calendarEventOperationsState.value = CalendarEventOperationsState.RemoveDecimalSegmentRequested
         }
 
-        override fun removeDecimalSegment() {
-
+        override fun confirmRemoveDecimalSegment(eventTitle: String) {
+            dismissInputForm()
+            decimalSlotsStateController.decimalSlotsDataUpdater.run {
+                // TODO: Complete implementation of removeDecimalSegment()
+            }
         }
 
         override fun toggleAxisType() {
@@ -109,18 +112,17 @@ class DayScheduleAppViewModel {
         override fun dismissInputForm() {
             calendarEventOperationsState.value = CalendarEventOperationsState.Hidden
         }
-
     }
 
     interface UiActionListener {
         fun showAddTimeEventForm()
         fun confirmAddTimeEvent(title: String, startLocalTime: LocalTime, endLocalTime: LocalTime)
         fun showRemoveTimeEventForm()
-        fun removeTimeEvent()
+        fun confirmRemoveTimeEvent(eventTitle: String)
         fun showAddDecimalSegmentForm()
         fun confirmAddDecimalSegment(title: String, startValue: Float, endValue: Float)
         fun showRemoveSegmentForm()
-        fun removeDecimalSegment()
+        fun confirmRemoveDecimalSegment(eventTitle: String)
         fun toggleAxisType()
         fun dismissInputForm()
     }

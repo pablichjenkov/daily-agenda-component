@@ -125,12 +125,12 @@ class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
                 endValue = 10.0F
             ),
             Event(
-                title = "Evt 14",
+                title = "Evt 15",
                 startValue = 9.5F,
                 endValue = 10.0F
             ),
             Event(
-                title = "Evt 14",
+                title = "Evt 16",
                 startValue = 9.5F,
                 endValue = 10.0F
             )
@@ -140,17 +140,17 @@ class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
     private fun createEventsFor10(): List<Event> {
         return listOf(
             Event(
-                title = "Evt 15",
+                title = "Evt 17",
                 startValue = 10.0F,
                 endValue = 11.5F
             ),
             Event(
-                title = "Evt 16",
+                title = "Evt 18",
                 startValue = 10.0F,
                 endValue = 11.0F
             ),
             Event(
-                title = "Evt 17",
+                title = "Evt 19",
                 startValue = 10.0F,
                 endValue = 10.5F
             )
@@ -160,12 +160,12 @@ class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
     private fun createEventsFor10_5(): List<Event> {
         return listOf(
             Event(
-                title = "Evt 18",
+                title = "Evt 20",
                 startValue = 10.5F,
                 endValue = 11.5F
             ),
             Event(
-                title = "Evt 19",
+                title = "Evt 21",
                 startValue = 10.5F,
                 endValue = 11.0F
             )

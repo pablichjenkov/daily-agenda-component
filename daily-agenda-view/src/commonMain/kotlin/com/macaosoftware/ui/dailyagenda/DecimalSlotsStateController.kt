@@ -31,7 +31,8 @@ open class DecimalSlotsStateController(
             slots.add(
                 Slot(
                     title = "$slotStartValue",
-                    value = slotStartValue
+                    startValue = slotStartValue,
+                    endValue = slotStartValue + slotUnit
                 )
             )
         }

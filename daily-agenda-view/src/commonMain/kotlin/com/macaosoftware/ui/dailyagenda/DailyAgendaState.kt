@@ -14,7 +14,8 @@ class DailyAgendaState(
 @ConsistentCopyVisibility
 data class Slot internal constructor(
     val title: String,
-    val value: Float
+    val startValue: Float,
+    val endValue: Float
 )
 
 // TODO: Change var with val SlotInfo.copy()

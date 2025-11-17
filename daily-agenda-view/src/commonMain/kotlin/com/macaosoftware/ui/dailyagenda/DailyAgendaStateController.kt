@@ -13,8 +13,8 @@ class DailyAgendaStateController(
 
     private val config = Config(
         eventsArrangement = eventsArrangement,
-        initialSlotValue = slots[0].value,
-        lastSlotValue = slots[slots.lastIndex].value,
+        initialSlotValue = slots[0].startValue,
+        lastSlotValue = slots[slots.lastIndex].startValue,
         slotScale = slotConfig.slotScale,
         slotHeight = slotConfig.slotHeight,
         timelineLeftPadding = 72
@@ -25,11 +25,11 @@ class DailyAgendaStateController(
     val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
 
     init {
-        slots.forEach { slotToEventMapSorted.put(it, mutableListOf()) }
+        slots.forEach { slotToEventMapSorted[it] = mutableListOf() }
     }
 
     fun getSlotForValue(startValue: Float): Slot {
-        return slots.find { abs(x = startValue - it.value) < slotUnit }
+        return slots.find { abs(x = startValue - it.startValue) < slotUnit }
             ?: error("startTime: $startValue must be between ${config.initialSlotValue} and ${config.lastSlotValue}")
     }
 

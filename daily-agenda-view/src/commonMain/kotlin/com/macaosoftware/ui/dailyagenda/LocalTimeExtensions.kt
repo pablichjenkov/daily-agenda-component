@@ -14,7 +14,8 @@ data class LocalTimeEvent(
 
 data class LocalTimeSlot(
     val title: String,
-    val localTime: LocalTime
+    val startTime: LocalTime,
+    val endTime: LocalTime
 )
 
 fun Event.toLocalTimeEvent(): LocalTimeEvent {
@@ -40,14 +41,16 @@ fun LocalTimeEvent.toEvent(): Event {
 fun Slot.toLocalTimeSlot(): LocalTimeSlot {
     return LocalTimeSlot(
         title = title,
-        localTime = fromValueToLocalTime(value = value)
+        startTime = fromValueToLocalTime(value = startValue),
+        endTime = fromValueToLocalTime(value = endValue),
     )
 }
 
 fun LocalTimeSlot.toSlot(): Slot {
     return Slot(
         title = title,
-        value = fromLocalTimeToValue(localTime = localTime)
+        startValue = fromLocalTimeToValue(localTime = startTime),
+        endValue = fromLocalTimeToValue(localTime = endTime)
     )
 }
 
@@ -96,7 +99,7 @@ fun fromDecimalValueToTimeText(
     return "$hourUnitsFormatted:$minutesTwoDigitFormat:$amPmSuffix"
 }
 
-fun TimeSlotConfig.toSlotConfig() : SlotConfig {
+fun TimeSlotConfig.toSlotConfig(): SlotConfig {
     return SlotConfig(
         initialSlotValue = fromLocalTimeToValue(startSlotTime),
         lastSlotValue = fromLocalTimeToValue(endSlotTime),

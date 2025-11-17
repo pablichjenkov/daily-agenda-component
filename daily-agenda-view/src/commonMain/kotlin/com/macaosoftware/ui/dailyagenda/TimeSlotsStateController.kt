@@ -33,7 +33,8 @@ class TimeSlotsStateController(
             slots.add(
                 Slot(
                     title = title,
-                    value = slotStartValue
+                    startValue = slotStartValue,
+                    endValue = slotStartValue + slotUnit
                 )
             )
         }

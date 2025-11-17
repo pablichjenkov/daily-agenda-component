@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.max
  * Returns the Event Y axis offset in Dp from the slot start time.
  * */
 internal fun getEventTranslationInSlot(event: Event, eventSlot: Slot, config: Config): Dp {
-    val fractionOfSlots = (event.startValue - eventSlot.value) * config.slotScale
+    val fractionOfSlots = (event.startValue - eventSlot.startValue) * config.slotScale
     return (fractionOfSlots * config.slotHeight).dp
 }
 
@@ -55,7 +55,7 @@ internal fun getSlotsIncludeStartSlot(
     val eventSlots = slots.subList(slotIndex, slots.size)
     val containingSlots = mutableListOf<Slot>()
     eventSlots.forEach { slot ->
-        if (event.endValue > slot.value + 0.0001) {
+        if (event.endValue > slot.startValue + 0.0001) {
             containingSlots.add(slot)
         }
     }
@@ -74,7 +74,7 @@ internal fun getSlotsIgnoreStartSlot(
     val laterSlots = dailyAgendaState.slots.subList(slotIndex + 1, dailyAgendaState.slots.size)
     val containingSlots = mutableListOf<Slot>()
     laterSlots.forEach { slot ->
-        if (event.endValue > slot.value + 0.0001) {
+        if (event.endValue > slot.startValue + 0.0001) {
             containingSlots.add(slot)
         }
     }
@@ -115,8 +115,8 @@ internal fun updateEventOffsetX(
     }
 }
 
-internal fun Event.isSingleSlot(): Boolean {
-    return endValue - startValue < 0.6
+internal fun Event.isSingleSlot(eventSlot: Slot): Boolean {
+    return eventSlot.endValue >= endValue
 }
 
 internal fun getEventWidthFromLeft(
@@ -130,13 +130,13 @@ internal fun getEventWidthFromLeft(
     slotRemainingWidth: Dp,
     minimumWidth: Dp
 ): Dp {
-    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, event)) {
+    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, event, eventSlot)) {
         return minimumWidth
     }
 
     var singleSlotWidth: Dp? = null
 
-    val eventWidth = if (event.isSingleSlot()) {
+    val eventWidth = if (event.isSingleSlot(eventSlot)) {
         singleSlotWidth ?: run {
             val amountOfSingleSlotEvents = (amountOfEventsInSameSlot - currentEventIndex)
             ((eventContainerWidth - offsetInfo.getTotalLeftOffset() - offsetInfo.rightStartOffset) / amountOfSingleSlotEvents).also {
@@ -166,13 +166,13 @@ internal fun getEventWidthFromRight(
     slotRemainingWidth: Dp,
     minimumWidth: Dp
 ): Dp {
-    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, event)) {
+    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, event, eventSlot)) {
         return minimumWidth
     }
 
     var singleSlotWidth: Dp? = null
 
-    val eventWidth: Dp = if (event.isSingleSlot()) {
+    val eventWidth: Dp = if (event.isSingleSlot(eventSlot)) {
         singleSlotWidth ?: run {
             val amountOfSingleSlotEvents = (amountOfEventsInSameSlot - currentEventIndex)
             ((eventContainerWidth - offsetInfo.leftStartOffset - offsetInfo.getTotalRightOffset()) / amountOfSingleSlotEvents).also {
@@ -193,14 +193,15 @@ internal fun getEventWidthFromRight(
 
 private fun shouldReturnMinimumAllowedWidth(
     config: Config,
-    event: Event
+    event: Event,
+    eventSlot: Slot
 ): Boolean {
     when (val eventsArrangement = config.eventsArrangement) {
         is EventsArrangement.LeftToRight -> {
             if (!eventsArrangement.lastEventFillRow) {
                 return true
             }
-            if (!event.isSingleSlot()) {
+            if (!event.isSingleSlot(eventSlot)) {
                 return true
             }
             return false
@@ -210,7 +211,7 @@ private fun shouldReturnMinimumAllowedWidth(
             return when (eventsArrangement.eventWidthType) {
                 EventWidthType.MaxVariableSize -> false
                 EventWidthType.FixedSize -> true
-                EventWidthType.FixedSizeFillLastEvent -> !event.isSingleSlot()
+                EventWidthType.FixedSizeFillLastEvent -> !event.isSingleSlot(eventSlot)
             }
 
         }
@@ -219,7 +220,7 @@ private fun shouldReturnMinimumAllowedWidth(
             if (!eventsArrangement.lastEventFillRow) {
                 return true
             }
-            if (!event.isSingleSlot()) {
+            if (!event.isSingleSlot(eventSlot)) {
                 return true
             }
             return false

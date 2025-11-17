@@ -13,7 +13,7 @@ class TimeSlotsDataUpdater(
         endTime: LocalTime,
         title: String
     ): Boolean {
-        return decimalSlotsDataUpdater.addEvent(
+        return decimalSlotsDataUpdater.addDecimalSegment(
             startValue = fromLocalTimeToValue(localTime = startTime),
             endValue = fromLocalTimeToValue(localTime = endTime),
             title = title
@@ -21,7 +21,7 @@ class TimeSlotsDataUpdater(
     }
 
     fun addEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.addEvent(event = event.toEvent())
+        return decimalSlotsDataUpdater.addDecimalSegment(event = event.toEvent())
     }
 
     fun addEventList(startTime: LocalTime, events: List<LocalTimeEvent>) {

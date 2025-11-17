@@ -7,7 +7,7 @@ open class DecimalSlotsDataUpdater(
     private var isListOperation = false
     private val slotToEventMapSortedTemp: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
 
-    fun addEvent(
+    fun addDecimalSegment(
         startValue: Float,
         endValue: Float,
         title: String
@@ -17,9 +17,9 @@ open class DecimalSlotsDataUpdater(
             dailyAgendaStateController.slotToEventMapSorted[eventSlot] ?: mutableListOf()
 
         var insertionIndex = 0
-        for (idx in 0..siblingEvents.lastIndex) {
-            if (siblingEvents[idx].endValue < endValue) {
-                insertionIndex = idx; break
+        for (idx in siblingEvents.lastIndex downTo 0) {
+            if (siblingEvents[idx].endValue >= endValue) {
+                insertionIndex = idx + 1; break
             }
         }
         siblingEvents.add(
@@ -34,8 +34,8 @@ open class DecimalSlotsDataUpdater(
         return true
     }
 
-    fun addEvent(event: Event): Boolean {
-        return addEvent(
+    fun addDecimalSegment(event: Event): Boolean {
+        return addDecimalSegment(
             startValue = event.startValue,
             endValue = event.endValue,
             title = event.title
@@ -53,7 +53,16 @@ open class DecimalSlotsDataUpdater(
         }
     }
 
-    fun removeEvent(event: Event): Boolean {
+    fun removeDecimalSegmentByTittle(eventTitle: String): Boolean {
+        TODO("Lookup for the event in all the slots, then remove it")
+//        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = event.startValue)
+//        val siblingEvents =
+//            dailyAgendaStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
+//                ?: return false
+//        return siblingEvents.remove(event)
+    }
+
+    fun removeDecimalSegment(event: Event): Boolean {
         val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = event.startValue)
         val siblingEvents =
             dailyAgendaStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
@@ -98,6 +107,7 @@ open class DecimalSlotsDataUpdater(
                     eventsSortedByEndTime
                 )
             }
+            isListOperation = false
         }
 
         dailyAgendaStateController.updateState()
