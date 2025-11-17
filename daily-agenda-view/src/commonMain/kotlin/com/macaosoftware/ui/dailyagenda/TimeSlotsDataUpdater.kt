@@ -32,7 +32,7 @@ class TimeSlotsDataUpdater(
     }
 
     fun removeEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.removeEvent(event = event.toEvent())
+        return decimalSlotsDataUpdater.removeDecimalSegment(event = event.toEvent())
     }
 
     fun commit() {

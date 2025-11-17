@@ -1,5 +1,5 @@
 [versions]
-dailyAgendaView = "1.0.1"
+dailyAgendaView = "1.0.2"
 kotlin = "2.2.21"
 agp = "8.13.1"
 android-compileSdk = "36"
