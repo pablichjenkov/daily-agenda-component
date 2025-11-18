@@ -7,8 +7,8 @@ import com.macaosoftware.ui.dailyagenda.EventsArrangement
 import com.macaosoftware.ui.dailyagenda.SlotConfig
 import com.macaosoftware.ui.dailyagenda.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
-import com.macaosoftware.ui.data.Sample0
-import com.macaosoftware.ui.data.Sample1
+import com.macaosoftware.ui.data.TimeEventDataSample
+import com.macaosoftware.ui.data.DecimalSegmentDataSample
 import kotlinx.datetime.LocalTime
 
 class DayScheduleAppViewModel {
@@ -26,7 +26,7 @@ class DayScheduleAppViewModel {
         eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
     ).apply {
         // Prepare the initial data
-        Sample0(timeSlotsStateController = this)
+        TimeEventDataSample(timeSlotsStateController = this)
     }
 
     val decimalSlotsStateController =
@@ -40,7 +40,7 @@ class DayScheduleAppViewModel {
             eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
         ).apply {
             // Prepare the initial data
-            Sample1(decimalSlotsStateController = this)
+            DecimalSegmentDataSample(decimalSlotsStateController = this)
         }
 
     var calendarEventOperationsState = mutableStateOf<CalendarEventOperationsState>(CalendarEventOperationsState.Hidden)
@@ -56,13 +56,12 @@ class DayScheduleAppViewModel {
             endLocalTime: LocalTime
         ) {
             dismissInputForm()
-            timeSlotsStateController.timeSlotsDataUpdater.run {
+            timeSlotsStateController.timeSlotsDataUpdater.postUpdate {
                 addEvent(
                     title = title,
                     startTime = startLocalTime,
                     endTime = endLocalTime
                 )
-                commit()
             }
         }
 
@@ -72,6 +71,9 @@ class DayScheduleAppViewModel {
 
         override fun confirmRemoveTimeEvent(eventTitle: String) {
             dismissInputForm()
+            timeSlotsStateController.timeSlotsDataUpdater.postUpdate {
+                removeEventByTitle(eventTitle = eventTitle)
+            }
         }
 
         override fun showAddDecimalSegmentForm() {
@@ -84,13 +86,12 @@ class DayScheduleAppViewModel {
             endValue: Float
         ) {
             dismissInputForm()
-            decimalSlotsStateController.decimalSlotsDataUpdater.run {
+            decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
                 addDecimalSegment(
                     title = title,
                     startValue = startValue,
                     endValue = endValue
                 )
-                commit()
             }
         }
 
@@ -100,8 +101,8 @@ class DayScheduleAppViewModel {
 
         override fun confirmRemoveDecimalSegment(eventTitle: String) {
             dismissInputForm()
-            decimalSlotsStateController.decimalSlotsDataUpdater.run {
-                // TODO: Complete implementation of removeDecimalSegment()
+            decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
+                removeDecimalSegmentByTittle(eventTitle = eventTitle)
             }
         }
 

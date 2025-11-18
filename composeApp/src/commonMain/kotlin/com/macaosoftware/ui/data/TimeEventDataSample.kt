@@ -4,10 +4,10 @@ import com.macaosoftware.ui.dailyagenda.LocalTimeEvent
 import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
 import kotlinx.datetime.LocalTime
 
-class Sample0(timeSlotsStateController: TimeSlotsStateController) {
+class TimeEventDataSample(timeSlotsStateController: TimeSlotsStateController) {
 
     init {
-        with(receiver = timeSlotsStateController.timeSlotsDataUpdater) {
+        timeSlotsStateController.timeSlotsDataUpdater.postUpdate {
             addEvent(
                 startTime = LocalTime(hour = 8, minute = 0),
                 endTime = LocalTime(hour = 8, minute = 30),
@@ -34,9 +34,6 @@ class Sample0(timeSlotsStateController: TimeSlotsStateController) {
                 endTime = LocalTime(hour = 9, minute = 0),
                 title = "S_EV 1"
             )
-
-            // Flush all the changes
-            commit()
         }
     }
 

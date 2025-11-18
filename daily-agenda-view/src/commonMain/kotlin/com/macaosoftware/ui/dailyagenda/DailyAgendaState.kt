@@ -3,7 +3,7 @@ package com.macaosoftware.ui.dailyagenda
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-class DailyAgendaState(
+data class DailyAgendaState(
     val slots: List<Slot>,
     val slotToEventMap: Map<Slot, List<Event>>,
     val slotInfoMap: Map<Slot, SlotInfo>,
@@ -29,11 +29,26 @@ data class SlotInfo internal constructor(
 }
 
 data class Event(
-    // val startSlot: Slot,
     val title: String,
     val startValue: Float,
     val endValue: Float
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        val otherEvent: Event = (other as? Event) ?: return false
+        if (otherEvent.startValue != startValue) return false
+        if (otherEvent.endValue != endValue) return false
+        return otherEvent.title == title
+    }
+
+    override fun hashCode(): Int {
+        var result = startValue.hashCode()
+        result = 31 * result + endValue.hashCode()
+        result = 31 * result + title.hashCode()
+        return result
+    }
+}
 
 internal class OffsetInfo(
     var leftStartOffset: Dp = 0.dp,
@@ -54,7 +69,8 @@ data class SlotConfig(
     val timelineLeftPadding: Int = 72
 )
 
-data class Config(
+@ConsistentCopyVisibility
+data class Config internal constructor(
     val eventsArrangement: EventsArrangement = EventsArrangement.MixedDirections(),
     val initialSlotValue: Float,
     val lastSlotValue: Float,

@@ -1,6 +1,6 @@
 package com.macaosoftware.ui.dailyagenda
 
-open class DecimalSlotsDataUpdater(
+open class DecimalSlotsDataUpdater internal constructor(
     val dailyAgendaStateController: DailyAgendaStateController
 ) {
 
@@ -54,12 +54,18 @@ open class DecimalSlotsDataUpdater(
     }
 
     fun removeDecimalSegmentByTittle(eventTitle: String): Boolean {
-        TODO("Lookup for the event in all the slots, then remove it")
-//        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = event.startValue)
-//        val siblingEvents =
-//            dailyAgendaStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
-//                ?: return false
-//        return siblingEvents.remove(event)
+        var eventMatching: Event? = null
+        val entryContainingEvent =
+            dailyAgendaStateController.slotToEventMapSorted.entries.find { entry ->
+                eventMatching = entry.value.find { event ->
+                    event.title == eventTitle
+                }
+                eventMatching != null
+            }
+
+        return eventMatching?.let {
+            entryContainingEvent?.value?.remove(eventMatching)
+        } ?: false
     }
 
     fun removeDecimalSegment(event: Event): Boolean {
@@ -70,7 +76,7 @@ open class DecimalSlotsDataUpdater(
         return siblingEvents.remove(event)
     }
 
-    fun commit() {
+    internal fun commit() {
 
         if (isListOperation) {
             val slotToEventMapSortedMerge: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
@@ -111,6 +117,11 @@ open class DecimalSlotsDataUpdater(
         }
 
         dailyAgendaStateController.updateState()
+    }
+
+    fun postUpdate(block: DecimalSlotsDataUpdater.() -> Unit) {
+        this.block()
+        commit()
     }
 
 }

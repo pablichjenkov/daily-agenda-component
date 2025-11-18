@@ -1,7 +1,6 @@
 ## Daily Agenda View
 Daily Agenda View is a compose multiplatform component useful for Apps that need to present daily events or daily activities type of views.
-<BR/>
-<BR/>
+<br/>
 Use cases:
 - Daily task planner apps.
 - Appointment reservation or booking Apps.
@@ -32,7 +31,8 @@ Use cases:
   <td>
 
 | Agenda Version | Kotlin Version | CMP Version |
-|-------|--------|-------|
+|---------------|--------|-------|
+| 1.1.0 | 2.2.21 | 1.9.3 |
 | 1.0.2 | 2.2.21 | 1.9.3 |
 
   </td>
@@ -61,47 +61,47 @@ dependencies {
 }
 ```
 
-<BR/>
+<br/>
 
 The first thing you need is a **StateController**. You have to pick between **DecimalSlotsStateController** and
 **TimeSlotsStateController**. **DecimalSlotsStateController** for decimal value axiz and **TimeSlotsStateController**
-for hour and minute axis. See bellow
+for hour and minute axis. **TvScheduleSlotController** (coming soon ...)
 ```kotlin
 val timeSlotsStateController = remember {
     TimeSlotsStateController(
             timeSlotConfig = TimeSlotConfig(slotScale = 2, slotHeight = 48),
             eventsArrangement =
                 EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
-        )
-        .apply {
-            timeSlotsDataUpdater.addEvent(
-                startTime = LocalTime(hour = 8, minute = 0),
-                endTime = LocalTime(hour = 8, minute = 30),
-                title = "Event 0"
-            )
-            timeSlotsDataUpdater.addEventList(
-                startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
-                events =
-                    listOf(
-                        LocalTimeEvent(
-                            startTime = LocalTime(hour = 8, minute = 0),
-                            endTime = LocalTime(hour = 8, minute = 45),
-                            title = "Event 1"
-                        ),
-                        LocalTimeEvent(
-                            startTime = LocalTime(hour = 8, minute = 0),
-                            endTime = LocalTime(hour = 9, minute = 0),
-                            title = "Event 2"
+        ).apply {
+            timeSlotsDataUpdater.postUpdate {
+                addEvent(
+                    startTime = LocalTime(hour = 8, minute = 0),
+                    endTime = LocalTime(hour = 8, minute = 30),
+                    title = "Event 0"
+                )
+                addEventList(
+                    startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
+                    events =
+                        listOf(
+                            LocalTimeEvent(
+                                startTime = LocalTime(hour = 8, minute = 0),
+                                endTime = LocalTime(hour = 8, minute = 45),
+                                title = "Event 1"
+                            ),
+                            LocalTimeEvent(
+                                startTime = LocalTime(hour = 8, minute = 0),
+                                endTime = LocalTime(hour = 9, minute = 0),
+                                title = "Event 2"
+                            )
                         )
-                    )
-            )
-            timeSlotsDataUpdater.commit()
+                )
+            }
         }
 }
 
 ```
 
-<BR/>
+<br/>
 
 Now that you create a **SlotStateController** and add some events to it. Then add a **TimeSlotsView** 
 in your Composable function:

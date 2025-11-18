@@ -2,7 +2,7 @@ package com.macaosoftware.ui.dailyagenda
 
 import kotlinx.datetime.LocalTime
 
-class TimeSlotsDataUpdater(
+class TimeSlotsDataUpdater internal constructor(
     dailyAgendaStateController: DailyAgendaStateController
 ) {
 
@@ -35,7 +35,12 @@ class TimeSlotsDataUpdater(
         return decimalSlotsDataUpdater.removeDecimalSegment(event = event.toEvent())
     }
 
-    fun commit() {
+    fun removeEventByTitle(eventTitle: String): Boolean {
+        return decimalSlotsDataUpdater.removeDecimalSegmentByTittle(eventTitle = eventTitle)
+    }
+
+    fun postUpdate(block: TimeSlotsDataUpdater.() -> Unit) {
+        this.block()
         decimalSlotsDataUpdater.commit()
     }
 

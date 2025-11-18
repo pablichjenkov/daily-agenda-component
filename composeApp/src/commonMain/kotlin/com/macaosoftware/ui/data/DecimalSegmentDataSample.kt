@@ -3,10 +3,10 @@ package com.macaosoftware.ui.data
 import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.Event
 
-class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
+class DecimalSegmentDataSample(decimalSlotsStateController: DecimalSlotsStateController) {
 
     init {
-        decimalSlotsStateController.decimalSlotsDataUpdater.run {
+        decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
             addDecimalSegmentList(
                 startValue = 8.0F,
                 segments = createSegmentsFor8()
@@ -31,9 +31,6 @@ class Sample1(decimalSlotsStateController: DecimalSlotsStateController) {
                 startValue = 10.5F,
                 segments = createEventsFor10_5()
             )
-
-            // Flush all the changes
-            commit()
         }
     }
 
