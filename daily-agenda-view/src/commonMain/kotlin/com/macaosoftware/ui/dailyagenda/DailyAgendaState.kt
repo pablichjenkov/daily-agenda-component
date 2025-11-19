@@ -2,10 +2,12 @@ package com.macaosoftware.ui.dailyagenda
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 data class DailyAgendaState(
     val slots: List<Slot>,
-    val slotToEventMap: Map<Slot, List<Event>>,
+    val slotToDecimalEventMap: Map<Slot, List<DecimalEvent>>,
     val slotInfoMap: Map<Slot, SlotInfo>,
     val maxColumns: Int,
     val config: Config
@@ -28,25 +30,23 @@ data class SlotInfo internal constructor(
     fun getTotalColumnSpans() = numberOfColumnsLeft + numberOfColumnsRight
 }
 
-data class Event(
+@OptIn(ExperimentalUuidApi::class)
+data class DecimalEvent(
+    val uuid: Uuid,
     val title: String,
+    val description: String,
     val startValue: Float,
     val endValue: Float
 ) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        val otherEvent: Event = (other as? Event) ?: return false
-        if (otherEvent.startValue != startValue) return false
-        if (otherEvent.endValue != endValue) return false
-        return otherEvent.title == title
+        if (other !is DecimalEvent) return false
+        return other.uuid == uuid
     }
 
     override fun hashCode(): Int {
-        var result = startValue.hashCode()
-        result = 31 * result + endValue.hashCode()
-        result = 31 * result + title.hashCode()
-        return result
+        return uuid.hashCode()
     }
 }
 

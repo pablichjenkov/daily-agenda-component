@@ -20,12 +20,12 @@ class DailyAgendaStateController(
         timelineLeftPadding = 72
     )
 
-    internal val slotToEventMapSorted: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
+    internal val slotToDecimalEventMapSorted: MutableMap<Slot, MutableList<DecimalEvent>> = mutableMapOf()
 
     val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
 
     init {
-        slots.forEach { slotToEventMapSorted[it] = mutableListOf() }
+        slots.forEach { slotToDecimalEventMapSorted[it] = mutableListOf() }
     }
 
     fun getSlotForValue(startValue: Float): Slot {
@@ -36,12 +36,12 @@ class DailyAgendaStateController(
     internal fun computeNextState(): DailyAgendaState {
         val result = computeSlotInfo(
             slots = slots,
-            slotToEventMap = slotToEventMapSorted,
+            slotToDecimalEventMap = slotToDecimalEventMapSorted,
             config = config
         )
         return DailyAgendaState(
             slots = slots,
-            slotToEventMap = slotToEventMapSorted,
+            slotToDecimalEventMap = slotToDecimalEventMapSorted,
             slotInfoMap = result.slotInfoMap,
             maxColumns = result.maxColumns,
             config = config
@@ -58,7 +58,7 @@ class DailyAgendaStateController(
      * */
     private fun computeSlotInfo(
         slots: List<Slot>,
-        slotToEventMap: Map<Slot, List<Event>>,
+        slotToDecimalEventMap: Map<Slot, List<DecimalEvent>>,
         config: Config
     ): ComputeSlotInfoResult {
 
@@ -77,7 +77,7 @@ class DailyAgendaStateController(
             val slotLeftColumnMap = mutableMapOf<Slot, Int>()
             val slotRightColumnMap = mutableMapOf<Slot, Int>()
 
-            slotToEventMap[slotIter]?.forEachIndexed { idx, event ->
+            slotToDecimalEventMap[slotIter]?.forEachIndexed { idx, event ->
 
                 val eventSlot = getSlotForValue(startValue = event.startValue)
 

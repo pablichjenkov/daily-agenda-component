@@ -1,6 +1,8 @@
 package com.macaosoftware.ui.dailyagenda
 
 import kotlinx.datetime.LocalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class TimeSlotsDataUpdater internal constructor(
     dailyAgendaStateController: DailyAgendaStateController
@@ -8,31 +10,36 @@ class TimeSlotsDataUpdater internal constructor(
 
     private val decimalSlotsDataUpdater = DecimalSlotsDataUpdater(dailyAgendaStateController)
 
+    @OptIn(ExperimentalUuidApi::class)
     fun addEvent(
+        uuid: Uuid = Uuid.random(),
+        title: String,
+        description: String,
         startTime: LocalTime,
-        endTime: LocalTime,
-        title: String
+        endTime: LocalTime
     ): Boolean {
         return decimalSlotsDataUpdater.addDecimalSegment(
+            uuid = uuid,
+            title = title,
+            description = description,
             startValue = fromLocalTimeToValue(localTime = startTime),
-            endValue = fromLocalTimeToValue(localTime = endTime),
-            title = title
+            endValue = fromLocalTimeToValue(localTime = endTime)
         )
     }
 
     fun addEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.addDecimalSegment(event = event.toEvent())
+        return decimalSlotsDataUpdater.addDecimalSegment(decimalEvent = event.toDecimalSegment())
     }
 
     fun addEventList(startTime: LocalTime, events: List<LocalTimeEvent>) {
         return decimalSlotsDataUpdater.addDecimalSegmentList(
             startValue = fromLocalTimeToValue(localTime = startTime),
-            segments = events.map { it.toEvent() }
+            segments = events.map { it.toDecimalSegment() }
         )
     }
 
     fun removeEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.removeDecimalSegment(event = event.toEvent())
+        return decimalSlotsDataUpdater.removeDecimalSegment(decimalEvent = event.toDecimalSegment())
     }
 
     fun removeEventByTitle(eventTitle: String): Boolean {

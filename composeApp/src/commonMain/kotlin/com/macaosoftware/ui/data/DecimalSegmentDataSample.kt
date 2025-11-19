@@ -1,7 +1,9 @@
 package com.macaosoftware.ui.data
 
 import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
-import com.macaosoftware.ui.dailyagenda.Event
+import com.macaosoftware.ui.dailyagenda.DecimalEvent
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class DecimalSegmentDataSample(decimalSlotsStateController: DecimalSlotsStateController) {
 
@@ -34,135 +36,183 @@ class DecimalSegmentDataSample(decimalSlotsStateController: DecimalSlotsStateCon
         }
     }
 
-    private fun createSegmentsFor8(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createSegmentsFor8(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Ev 1",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev1",
+                description = Constants.EmptyDescription,
                 startValue = 8.0F,
                 endValue = 10.0F
             ),
-            Event(
-                title = "Ev 2",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev2",
+                description = Constants.EmptyDescription,
                 startValue = 8.0F,
                 endValue = 9.5F
             ),
-            Event(
-                title = "Ev 3",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev3",
+                description = Constants.EmptyDescription,
                 startValue = 8.0F,
                 endValue = 9.0F
             ),
-            Event(
-                title = "Ev 4",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev4",
+                description = Constants.EmptyDescription,
                 startValue = 8.0F,
                 endValue = 8.75F
             ),
-            Event(
-                title = "Ev 5",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev5",
+                description = Constants.EmptyDescription,
                 startValue = 8.0F,
                 endValue = 8.25F
             ),
         )
     }
 
-    private fun createEventsFor8_5(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createEventsFor8_5(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Evt 6",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev6",
+                description = Constants.EmptyDescription,
                 startValue = 8.5F,
                 endValue = 11.0F
             ),
-            Event(
-                title = "Evt 7",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev7",
+                description = Constants.EmptyDescription,
                 startValue = 8.5F,
                 endValue = 9.5F
             ),
-            Event(
-                title = "Evt 8",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev8",
+                description = Constants.EmptyDescription,
                 startValue = 8.5F,
                 endValue = 9.0F
             ),
         )
     }
 
-    private fun createEventsFor9(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createEventsFor9(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Evt 9",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev9",
+                description = Constants.EmptyDescription,
                 startValue = 9.0F,
                 endValue = 10.0F
             ),
-            Event(
-                title = "Evt 10",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev10",
+                description = Constants.EmptyDescription,
                 startValue = 9.0F,
                 endValue = 10.0F
             )
         )
     }
 
-    private fun createEventsFor9_5(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createEventsFor9_5(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Evt 11",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev11",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 11.0F
             ),
-            Event(
-                title = "Evt 12",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev12",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 10.5F
             ),
-            Event(
-                title = "Evt 13",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev13",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 10.0F
             ),
-            Event(
-                title = "Evt 14",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev14",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 10.0F
             ),
-            Event(
-                title = "Evt 15",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev15",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 10.0F
             ),
-            Event(
-                title = "Evt 16",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev16",
+                description = Constants.EmptyDescription,
                 startValue = 9.5F,
                 endValue = 10.0F
             )
         )
     }
 
-    private fun createEventsFor10(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createEventsFor10(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Evt 17",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev17",
+                description = Constants.EmptyDescription,
                 startValue = 10.0F,
                 endValue = 11.5F
             ),
-            Event(
-                title = "Evt 18",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev18",
+                description = Constants.EmptyDescription,
                 startValue = 10.0F,
                 endValue = 11.0F
             ),
-            Event(
-                title = "Evt 19",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev19",
+                description = Constants.EmptyDescription,
                 startValue = 10.0F,
                 endValue = 10.5F
             )
         )
     }
 
-    private fun createEventsFor10_5(): List<Event> {
+    @OptIn(ExperimentalUuidApi::class)
+    private fun createEventsFor10_5(): List<DecimalEvent> {
         return listOf(
-            Event(
-                title = "Evt 20",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev20",
+                description = Constants.EmptyDescription,
                 startValue = 10.5F,
                 endValue = 11.5F
             ),
-            Event(
-                title = "Evt 21",
+            DecimalEvent(
+                uuid = Uuid.random(),
+                title = "Ev21",
+                description = Constants.EmptyDescription,
                 startValue = 10.5F,
                 endValue = 11.0F
             )

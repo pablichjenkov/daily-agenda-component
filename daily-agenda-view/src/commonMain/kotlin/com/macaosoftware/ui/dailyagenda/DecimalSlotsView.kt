@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DecimalSlotsView(
     decimalSlotsStateController: DecimalSlotsStateController,
-    eventContentProvider: @Composable (event: Event) -> Unit
+    eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
 
     val dailyAgendaState = decimalSlotsStateController.dailyAgendaStateController.state.value

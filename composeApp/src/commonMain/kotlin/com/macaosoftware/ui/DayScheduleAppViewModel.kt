@@ -7,9 +7,11 @@ import com.macaosoftware.ui.dailyagenda.EventsArrangement
 import com.macaosoftware.ui.dailyagenda.SlotConfig
 import com.macaosoftware.ui.dailyagenda.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
+import com.macaosoftware.ui.data.Constants
 import com.macaosoftware.ui.data.TimeEventDataSample
 import com.macaosoftware.ui.data.DecimalSegmentDataSample
 import kotlinx.datetime.LocalTime
+import kotlin.uuid.ExperimentalUuidApi
 
 class DayScheduleAppViewModel {
 
@@ -45,6 +47,7 @@ class DayScheduleAppViewModel {
 
     var calendarEventOperationsState = mutableStateOf<CalendarEventOperationsState>(CalendarEventOperationsState.Hidden)
 
+    @OptIn(ExperimentalUuidApi::class)
     val uiActionListener = object : UiActionListener {
         override fun showAddTimeEventForm() {
             calendarEventOperationsState.value = CalendarEventOperationsState.AddTimedEventRequested
@@ -59,6 +62,7 @@ class DayScheduleAppViewModel {
             timeSlotsStateController.timeSlotsDataUpdater.postUpdate {
                 addEvent(
                     title = title,
+                    description = Constants.EmptyDescription,
                     startTime = startLocalTime,
                     endTime = endLocalTime
                 )
@@ -89,6 +93,7 @@ class DayScheduleAppViewModel {
             decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
                 addDecimalSegment(
                     title = title,
+                    description = Constants.EmptyDescription,
                     startValue = startValue,
                     endValue = endValue
                 )

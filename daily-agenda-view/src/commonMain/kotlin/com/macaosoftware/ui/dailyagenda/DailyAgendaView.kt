@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun DailyAgendaRootLayout(
     dailyAgendaState: DailyAgendaState,
-    eventContentProvider: @Composable (event: Event) -> Unit
+    eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -45,7 +45,7 @@ internal fun DailyAgendaRootLayout(
 private fun LeftThenRightLayout(
     dailyAgendaState: DailyAgendaState,
     eventContainerWidth: Dp,
-    eventContentProvider: @Composable (event: Event) -> Unit
+    eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
     val config = dailyAgendaState.config
     val minimumWidth = eventContainerWidth / dailyAgendaState.maxColumns
@@ -67,7 +67,7 @@ private fun LeftThenRightLayout(
         offsetMap
     }
 
-    dailyAgendaState.slotToEventMap.entries.forEach { entry ->
+    dailyAgendaState.slotToDecimalEventMap.entries.forEach { entry ->
         val slot = entry.key
         val numbersOfSlots = (slot.startValue - config.initialSlotValue) * config.slotScale
         val offsetY = (numbersOfSlots * config.slotHeight).dp
@@ -97,7 +97,7 @@ private fun LeftThenRightLayout(
                     val eventHeight = getEventHeight(event, config)
                     val eventWidth = getEventWidthFromLeft(
                         dailyAgendaState = dailyAgendaState,
-                        event = event,
+                        decimalEvent = event,
                         eventSlot = slot,
                         amountOfEventsInSameSlot = entry.value.size,
                         currentEventIndex = idx,
@@ -108,7 +108,7 @@ private fun LeftThenRightLayout(
                     )
                     updateEventOffsetX(
                         dailyAgendaState = dailyAgendaState,
-                        event = event,
+                        decimalEvent = event,
                         eventSlot = slot,
                         slotOffsetInfoMap = offsetInfoMap,
                         eventWidth = eventWidth,
@@ -134,7 +134,7 @@ private fun LeftThenRightLayout(
                     val eventHeight = getEventHeight(event, config)
                     val eventWidth = getEventWidthFromRight(
                         dailyAgendaState = dailyAgendaState,
-                        event = event,
+                        decimalEvent = event,
                         eventSlot = slot,
                         amountOfEventsInSameSlot = entry.value.size,
                         currentEventIndex = idx,
@@ -145,7 +145,7 @@ private fun LeftThenRightLayout(
                     )
                     updateEventOffsetX(
                         dailyAgendaState = dailyAgendaState,
-                        event = event,
+                        decimalEvent = event,
                         eventSlot = slot,
                         slotOffsetInfoMap = offsetInfoMap,
                         eventWidth = eventWidth,

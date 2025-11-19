@@ -19,7 +19,7 @@ internal fun SlotsLayer(dailyAgendaState: DailyAgendaState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        dailyAgendaState.slotToEventMap.keys.forEach { slot ->
+        dailyAgendaState.slotToDecimalEventMap.keys.forEach { slot ->
             SlotLine(slot = slot, config = dailyAgendaState.config)
         }
     }

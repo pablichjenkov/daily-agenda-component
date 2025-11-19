@@ -1,114 +1,121 @@
 package com.macaosoftware.ui.dailyagenda
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
 open class DecimalSlotsDataUpdater internal constructor(
     val dailyAgendaStateController: DailyAgendaStateController
 ) {
 
     private var isListOperation = false
-    private val slotToEventMapSortedTemp: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
+    private val slotToDecimalEventMapSortedTemp: MutableMap<Slot, MutableList<DecimalEvent>> =
+        mutableMapOf()
 
+    @OptIn(ExperimentalUuidApi::class)
     fun addDecimalSegment(
+        uuid: Uuid = Uuid.random(),
+        title: String,
+        description: String,
         startValue: Float,
         endValue: Float,
-        title: String
-    ): Boolean {
-        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
+    ): Boolean = addDecimalSegment(
+        DecimalEvent(
+            uuid = uuid,
+            startValue = startValue,
+            endValue = endValue,
+            title = title,
+            description = description
+        )
+    )
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun addDecimalSegment(decimalEvent: DecimalEvent): Boolean {
+        val eventSlot =
+            dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
-            dailyAgendaStateController.slotToEventMapSorted[eventSlot] ?: mutableListOf()
+            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot] ?: mutableListOf()
 
         var insertionIndex = 0
         for (idx in siblingEvents.lastIndex downTo 0) {
-            if (siblingEvents[idx].endValue >= endValue) {
+            if (siblingEvents[idx].endValue >= decimalEvent.endValue) {
                 insertionIndex = idx + 1; break
             }
         }
-        siblingEvents.add(
-            insertionIndex,
-            Event(
-                startValue = startValue,
-                endValue = endValue,
-                title = title
-            )
-        )
-
+        siblingEvents.add(insertionIndex, decimalEvent)
         return true
     }
 
-    fun addDecimalSegment(event: Event): Boolean {
-        return addDecimalSegment(
-            startValue = event.startValue,
-            endValue = event.endValue,
-            title = event.title
-        )
-    }
-
-    fun addDecimalSegmentList(startValue: Float, segments: List<Event>) {
+    fun addDecimalSegmentList(startValue: Float, segments: List<DecimalEvent>) {
         isListOperation = true
         val slot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
 
-        if (slotToEventMapSortedTemp.contains(slot)) {
-            slotToEventMapSortedTemp[slot]!!.addAll(elements = segments)
+        if (slotToDecimalEventMapSortedTemp.contains(slot)) {
+            slotToDecimalEventMapSortedTemp[slot]!!.addAll(elements = segments)
         } else {
-            slotToEventMapSortedTemp.put(slot, segments.toMutableList())
+            slotToDecimalEventMapSortedTemp.put(slot, segments.toMutableList())
         }
     }
 
     fun removeDecimalSegmentByTittle(eventTitle: String): Boolean {
-        var eventMatching: Event? = null
+        var decimalEventMatching: DecimalEvent? = null
         val entryContainingEvent =
-            dailyAgendaStateController.slotToEventMapSorted.entries.find { entry ->
-                eventMatching = entry.value.find { event ->
+            dailyAgendaStateController.slotToDecimalEventMapSorted.entries.find { entry ->
+                decimalEventMatching = entry.value.find { event ->
                     event.title == eventTitle
                 }
-                eventMatching != null
+                decimalEventMatching != null
             }
 
-        return eventMatching?.let {
-            entryContainingEvent?.value?.remove(eventMatching)
+        return decimalEventMatching?.let {
+            entryContainingEvent?.value?.remove(decimalEventMatching)
         } ?: false
     }
 
-    fun removeDecimalSegment(event: Event): Boolean {
-        val eventSlot = dailyAgendaStateController.getSlotForValue(startValue = event.startValue)
+    fun removeDecimalSegment(decimalEvent: DecimalEvent): Boolean {
+        val eventSlot =
+            dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
-            dailyAgendaStateController.slotToEventMapSorted[eventSlot]?.toMutableList()
+            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot]?.toMutableList()
                 ?: return false
-        return siblingEvents.remove(event)
+        return siblingEvents.remove(decimalEvent)
     }
 
     internal fun commit() {
 
         if (isListOperation) {
-            val slotToEventMapSortedMerge: MutableMap<Slot, MutableList<Event>> = mutableMapOf()
+            val slotToDecimalEventMapSortedMerge: MutableMap<Slot, MutableList<DecimalEvent>> =
+                mutableMapOf()
 
             for (slot in dailyAgendaStateController.slots) {
-                val addedSegments: MutableList<Event>? = slotToEventMapSortedTemp[slot]
-                val existingSegments: MutableList<Event> =
-                    dailyAgendaStateController.slotToEventMapSorted[slot]!!
+                val addedSegments: MutableList<DecimalEvent>? =
+                    slotToDecimalEventMapSortedTemp[slot]
+                val existingSegments: MutableList<DecimalEvent> =
+                    dailyAgendaStateController.slotToDecimalEventMapSorted[slot]!!
 
                 if (addedSegments != null) {
                     addedSegments.addAll(existingSegments)
-                    slotToEventMapSortedMerge.put(slot, addedSegments)
+                    slotToDecimalEventMapSortedMerge.put(slot, addedSegments)
                 } else {
-                    slotToEventMapSortedMerge.put(slot, existingSegments)
+                    slotToDecimalEventMapSortedMerge.put(slot, existingSegments)
                 }
             }
 
             /**
              * Sort the events to maximize spacing when the layout runs.
              * */
-            val endTimeComparator = Comparator { event1: Event, event2: Event ->
-                val diff = event2.endValue - event1.endValue
-                when {
-                    (diff > 0F) -> 1
-                    (diff < 0F) -> -1
-                    else -> 0
+            val endTimeComparator =
+                Comparator { decimalEvent1: DecimalEvent, decimalEvent2: DecimalEvent ->
+                    val diff = decimalEvent2.endValue - decimalEvent1.endValue
+                    when {
+                        (diff > 0F) -> 1
+                        (diff < 0F) -> -1
+                        else -> 0
+                    }
                 }
-            }
-            slotToEventMapSortedMerge.entries.forEach { entry ->
+            slotToDecimalEventMapSortedMerge.entries.forEach { entry ->
                 val eventsSortedByEndTime =
                     entry.value.sortedWith(endTimeComparator).toMutableList()
-                dailyAgendaStateController.slotToEventMapSorted.put(
+                dailyAgendaStateController.slotToDecimalEventMapSorted.put(
                     entry.key,
                     eventsSortedByEndTime
                 )

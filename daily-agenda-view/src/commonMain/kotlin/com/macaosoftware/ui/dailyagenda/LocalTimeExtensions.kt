@@ -1,16 +1,32 @@
 package com.macaosoftware.ui.dailyagenda
 
 import kotlinx.datetime.LocalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 private const val HOUR_AM = "AM"
 private const val HOUR_PM = "PM"
 private const val MINUTES_IN_ONE_HOUR = 60
 
+@OptIn(ExperimentalUuidApi::class)
 data class LocalTimeEvent(
+    val uuid: Uuid,
     val title: String,
+    val description: String,
     val startTime: LocalTime,
     val endTime: LocalTime
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is LocalTimeEvent) return false
+        return other.uuid == uuid
+    }
+
+    override fun hashCode(): Int {
+        return uuid.hashCode()
+    }
+}
 
 data class LocalTimeSlot(
     val title: String,
@@ -18,21 +34,27 @@ data class LocalTimeSlot(
     val endTime: LocalTime
 )
 
-fun Event.toLocalTimeEvent(): LocalTimeEvent {
+@OptIn(ExperimentalUuidApi::class)
+fun DecimalEvent.toLocalTimeEvent(): LocalTimeEvent {
     val startLocalTime = fromValueToLocalTime(value = startValue)
     val endLocalTime = fromValueToLocalTime(value = endValue)
     return LocalTimeEvent(
+        uuid = uuid,
         title = title,
+        description = description,
         startTime = startLocalTime,
         endTime = endLocalTime
     )
 }
 
-fun LocalTimeEvent.toEvent(): Event {
+@OptIn(ExperimentalUuidApi::class)
+fun LocalTimeEvent.toDecimalSegment(): DecimalEvent {
     val startTimeValue = fromLocalTimeToValue(localTime = startTime)
     val endTimeValue = fromLocalTimeToValue(localTime = endTime)
-    return Event(
+    return DecimalEvent(
+        uuid = uuid,
         title = title,
+        description = description,
         startValue = startTimeValue,
         endValue = endTimeValue
     )

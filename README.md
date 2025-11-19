@@ -75,23 +75,29 @@ val timeSlotsStateController = remember {
         ).apply {
             timeSlotsDataUpdater.postUpdate {
                 addEvent(
+                    uuid = Uuid.random(),
                     startTime = LocalTime(hour = 8, minute = 0),
                     endTime = LocalTime(hour = 8, minute = 30),
-                    title = "Event 0"
+                    title = "Event 0",
+                    description = "Description 0"
                 )
                 addEventList(
                     startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
                     events =
                         listOf(
                             LocalTimeEvent(
+                                uuid = Uuid.random(),
                                 startTime = LocalTime(hour = 8, minute = 0),
                                 endTime = LocalTime(hour = 8, minute = 45),
-                                title = "Event 1"
+                                title = "Event 1",
+                                description = "Description 1"
                             ),
                             LocalTimeEvent(
+                                uuid = Uuid.random(),
                                 startTime = LocalTime(hour = 8, minute = 0),
                                 endTime = LocalTime(hour = 9, minute = 0),
-                                title = "Event 2"
+                                title = "Event 2",
+                                description = "Description 2"
                             )
                         )
                 )
