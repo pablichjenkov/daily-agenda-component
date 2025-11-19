@@ -18,7 +18,7 @@ class TimeSlotsDataUpdater internal constructor(
         startTime: LocalTime,
         endTime: LocalTime
     ): Boolean {
-        return decimalSlotsDataUpdater.addDecimalSegment(
+        return decimalSlotsDataUpdater.addDecimalEvent(
             uuid = uuid,
             title = title,
             description = description,
@@ -28,22 +28,22 @@ class TimeSlotsDataUpdater internal constructor(
     }
 
     fun addEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.addDecimalSegment(decimalEvent = event.toDecimalSegment())
+        return decimalSlotsDataUpdater.addDecimalEvent(decimalEvent = event.toDecimalSegment())
     }
 
     fun addEventList(startTime: LocalTime, events: List<LocalTimeEvent>) {
-        return decimalSlotsDataUpdater.addDecimalSegmentList(
+        return decimalSlotsDataUpdater.addDecimalEventList(
             startValue = fromLocalTimeToValue(localTime = startTime),
             segments = events.map { it.toDecimalSegment() }
         )
     }
 
     fun removeEvent(event: LocalTimeEvent): Boolean {
-        return decimalSlotsDataUpdater.removeDecimalSegment(decimalEvent = event.toDecimalSegment())
+        return decimalSlotsDataUpdater.removeDecimalEvent(decimalEvent = event.toDecimalSegment())
     }
 
     fun removeEventByTitle(eventTitle: String): Boolean {
-        return decimalSlotsDataUpdater.removeDecimalSegmentByTittle(eventTitle = eventTitle)
+        return decimalSlotsDataUpdater.removeDecimalEventByTittle(eventTitle = eventTitle)
     }
 
     fun postUpdate(block: TimeSlotsDataUpdater.() -> Unit) {

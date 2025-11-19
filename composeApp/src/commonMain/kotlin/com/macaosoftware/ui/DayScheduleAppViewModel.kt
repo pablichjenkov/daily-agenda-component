@@ -91,7 +91,7 @@ class DayScheduleAppViewModel {
         ) {
             dismissInputForm()
             decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
-                addDecimalSegment(
+                addDecimalEvent(
                     title = title,
                     description = Constants.EmptyDescription,
                     startValue = startValue,
@@ -107,7 +107,7 @@ class DayScheduleAppViewModel {
         override fun confirmRemoveDecimalSegment(eventTitle: String) {
             dismissInputForm()
             decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
-                removeDecimalSegmentByTittle(eventTitle = eventTitle)
+                removeDecimalEventByTittle(eventTitle = eventTitle)
             }
         }
 

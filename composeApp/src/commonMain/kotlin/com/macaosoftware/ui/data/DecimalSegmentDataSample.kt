@@ -9,27 +9,27 @@ class DecimalSegmentDataSample(decimalSlotsStateController: DecimalSlotsStateCon
 
     init {
         decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 8.0F,
                 segments = createSegmentsFor8()
             )
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 8.5F,
                 segments = createEventsFor8_5()
             )
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 9.0F,
                 segments = createEventsFor9()
             )
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 9.5F,
                 segments = createEventsFor9_5()
             )
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 10.0F,
                 segments = createEventsFor10()
             )
-            addDecimalSegmentList(
+            addDecimalEventList(
                 startValue = 10.5F,
                 segments = createEventsFor10_5()
             )

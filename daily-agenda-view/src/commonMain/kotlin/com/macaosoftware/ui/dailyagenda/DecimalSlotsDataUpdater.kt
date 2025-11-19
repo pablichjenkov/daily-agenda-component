@@ -12,13 +12,13 @@ open class DecimalSlotsDataUpdater internal constructor(
         mutableMapOf()
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addDecimalSegment(
+    fun addDecimalEvent(
         uuid: Uuid = Uuid.random(),
         title: String,
         description: String,
         startValue: Float,
         endValue: Float,
-    ): Boolean = addDecimalSegment(
+    ): Boolean = addDecimalEvent(
         DecimalEvent(
             uuid = uuid,
             startValue = startValue,
@@ -29,7 +29,7 @@ open class DecimalSlotsDataUpdater internal constructor(
     )
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addDecimalSegment(decimalEvent: DecimalEvent): Boolean {
+    fun addDecimalEvent(decimalEvent: DecimalEvent): Boolean {
         val eventSlot =
             dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
@@ -45,7 +45,7 @@ open class DecimalSlotsDataUpdater internal constructor(
         return true
     }
 
-    fun addDecimalSegmentList(startValue: Float, segments: List<DecimalEvent>) {
+    fun addDecimalEventList(startValue: Float, segments: List<DecimalEvent>) {
         isListOperation = true
         val slot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
 
@@ -56,27 +56,35 @@ open class DecimalSlotsDataUpdater internal constructor(
         }
     }
 
-    fun removeDecimalSegmentByTittle(eventTitle: String): Boolean {
+    fun traverseSlotsForDecimalEvent(predicate: (DecimalEvent) -> Boolean): SlotTraversalResult? {
         var decimalEventMatching: DecimalEvent? = null
-        val entryContainingEvent =
+        val entryMatching =
             dailyAgendaStateController.slotToDecimalEventMapSorted.entries.find { entry ->
-                decimalEventMatching = entry.value.find { event ->
-                    event.title == eventTitle
-                }
+                decimalEventMatching = entry.value.find { event -> predicate.invoke(event) }
                 decimalEventMatching != null
             }
-
         return decimalEventMatching?.let {
-            entryContainingEvent?.value?.remove(decimalEventMatching)
-        } ?: false
+            SlotTraversalResult(entryMatching!!, decimalEventMatching)
+        }
     }
 
-    fun removeDecimalSegment(decimalEvent: DecimalEvent): Boolean {
+    fun removeDecimalEventByTittle(eventTitle: String): Boolean {
+        val decimalEventMatchingResult = traverseSlotsForDecimalEvent { event ->
+            eventTitle == event.title
+        } ?: return false
+
+        val entry = decimalEventMatchingResult.entry
+        val decimalEvent = decimalEventMatchingResult.decimalEvent
+
+        return entry.value.remove(decimalEvent)
+    }
+
+    fun removeDecimalEvent(decimalEvent: DecimalEvent): Boolean {
         val eventSlot =
             dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
-            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot]?.toMutableList()
-                ?: return false
+            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot] ?: return false
+
         return siblingEvents.remove(decimalEvent)
     }
 
@@ -132,3 +140,8 @@ open class DecimalSlotsDataUpdater internal constructor(
     }
 
 }
+
+class SlotTraversalResult(
+    val entry: MutableMap.MutableEntry<Slot, MutableList<DecimalEvent>>,
+    val decimalEvent: DecimalEvent
+)
