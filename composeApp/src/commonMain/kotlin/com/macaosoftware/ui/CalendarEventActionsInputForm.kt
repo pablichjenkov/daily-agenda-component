@@ -26,7 +26,7 @@ fun CalendarEventActionsInputForm(
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
-    when (calendarEventOperationsState) {
+    when (val state = calendarEventOperationsState) {
         CalendarEventOperationsState.AddTimedEventRequested -> {
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
@@ -75,7 +75,7 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmAddTimeEvent(
+                                uiActionListener.confirmedAddTimeEvent(
                                     title = textValueTitle,
                                     startLocalTime = LocalTime(
                                         textStartHour.toInt(),
@@ -106,7 +106,7 @@ fun CalendarEventActionsInputForm(
             // no-op
         }
 
-        CalendarEventOperationsState.AddDecimalSegmentRequested -> {
+        CalendarEventOperationsState.AddDecimalEventRequested -> {
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
                 sheetState = sheetState
@@ -136,7 +136,7 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmAddDecimalSegment(
+                                uiActionListener.confirmedAddDecimalSegment(
                                     title = textValueTitle,
                                     startValue = textStartValue.toFloat(),
                                     endValue = textEndValue.toFloat()
@@ -157,12 +157,16 @@ fun CalendarEventActionsInputForm(
             }
         }
 
-        CalendarEventOperationsState.RemoveDecimalSegmentRequested -> {
+        is CalendarEventOperationsState.RemoveTimedEventRequested -> {
+            val eventTitleInitialValue = when (state) {
+                CalendarEventOperationsState.RemoveTimedEventRequested.Empty -> ""
+                is CalendarEventOperationsState.RemoveTimedEventRequested.WithEvent -> state.localTimeEvent.title
+            }
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
                 sheetState = sheetState
             ) {
-                var eventTitle by remember { mutableStateOf("") }
+                var eventTitle by remember { mutableStateOf(eventTitleInitialValue) }
                 Column {
                     Text("Remove Event")
                     TextField(
@@ -173,7 +177,7 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmRemoveDecimalSegment(eventTitle)
+                                uiActionListener.confirmedRemoveTimeEvent(eventTitle)
                             }
                         }) {
                             Text("Remove")
@@ -190,12 +194,18 @@ fun CalendarEventActionsInputForm(
             }
         }
 
-        CalendarEventOperationsState.RemoveTimedEventRequested -> {
+        is CalendarEventOperationsState.RemoveDecimalEventRequested -> {
+            val eventTitleInitialValue = when (state) {
+                CalendarEventOperationsState.RemoveDecimalEventRequested.Empty -> ""
+                is CalendarEventOperationsState.RemoveDecimalEventRequested.WithEvent -> {
+                    state.decimalEvent.title
+                }
+            }
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
                 sheetState = sheetState
             ) {
-                var eventTitle by remember { mutableStateOf("") }
+                var eventTitle by remember { mutableStateOf(eventTitleInitialValue) }
                 Column {
                     Text("Remove Event")
                     TextField(
@@ -206,7 +216,8 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmRemoveTimeEvent(eventTitle)
+                                println("Pablo Remove Event Clicked")
+                                uiActionListener.confirmedRemoveDecimalEvent(eventTitle)
                             }
                         }) {
                             Text("Remove")

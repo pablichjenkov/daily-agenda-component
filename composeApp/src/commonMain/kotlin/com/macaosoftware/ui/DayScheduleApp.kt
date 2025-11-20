@@ -1,6 +1,7 @@
 package com.macaosoftware.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -36,9 +37,15 @@ fun DayScheduleApp() {
                     .padding(paddingValues = innerPadding)
             ) {
                 if (viewModel.showTimeSlots.value) {
-                    TimeSlotExample(viewModel.timeSlotsStateController)
+                    TimeSlotExample(
+                        timeSlotsStateController = viewModel.timeSlotsStateController,
+                        uiActionListener = viewModel.uiActionListener
+                    )
                 } else {
-                    DecimalSlotExample(viewModel.decimalSlotsStateController)
+                    DecimalSlotExample(
+                        decimalSlotsStateController = viewModel.decimalSlotsStateController,
+                        uiActionListener = viewModel.uiActionListener
+                    )
                 }
                 CalendarEventActionsView(
                     showTimeSlots = viewModel.showTimeSlots.value,
@@ -55,7 +62,8 @@ fun DayScheduleApp() {
 
 @Composable
 private fun TimeSlotExample(
-    timeSlotsStateController: TimeSlotsStateController
+    timeSlotsStateController: TimeSlotsStateController,
+    uiActionListener: DayScheduleAppViewModel.UiActionListener
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         TimeSlotsView(timeSlotsStateController = timeSlotsStateController) { localTimeEvent ->
@@ -63,6 +71,17 @@ private fun TimeSlotExample(
                 modifier = Modifier.fillMaxSize()
                     .padding(all = 2.dp)
                     .background(color = generateRandomColor())
+                    .combinedClickable(
+                        onClick = {
+                            uiActionListener.onTimeEventClicked(localTimeEvent)
+                        },
+                        onDoubleClick = {
+                            uiActionListener.onTimeEventDoubleClicked(localTimeEvent)
+                        },
+                        onLongClick = {
+                            uiActionListener.onTimeEventLongClicked(localTimeEvent)
+                        }
+                    )
             ) {
                 Text(
                     text = "${localTimeEvent.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
@@ -75,7 +94,8 @@ private fun TimeSlotExample(
 
 @Composable
 private fun DecimalSlotExample(
-    decimalSlotsStateController: DecimalSlotsStateController
+    decimalSlotsStateController: DecimalSlotsStateController,
+    uiActionListener: DayScheduleAppViewModel.UiActionListener
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         DecimalSlotsView(
@@ -85,6 +105,17 @@ private fun DecimalSlotExample(
                 modifier = Modifier.fillMaxSize()
                     .padding(all = 2.dp)
                     .background(color = generateRandomColor())
+                    .combinedClickable(
+                        onClick = {
+                            uiActionListener.onDecimalEventClicked(event)
+                        },
+                        onDoubleClick = {
+                            uiActionListener.onDecimalEventDoubleClicked(event)
+                        },
+                        onLongClick = {
+                            uiActionListener.onDecimalEventLongClicked(event)
+                        }
+                    )
             ) {
                 Text(
                     text = "${event.title}: ${event.startValue}-${event.endValue}",

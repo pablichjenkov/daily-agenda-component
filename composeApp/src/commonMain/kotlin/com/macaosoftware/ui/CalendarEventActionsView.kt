@@ -45,7 +45,7 @@ fun BoxScope.CalendarEventActionsView(
                 if (showTimeSlots) {
                     uiActionListener.showRemoveTimeEventForm()
                 } else {
-                    uiActionListener.showRemoveSegmentForm()
+                    uiActionListener.showRemoveDecimalEventForm()
                 }
             }
         ) {
