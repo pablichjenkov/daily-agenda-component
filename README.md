@@ -1,13 +1,5 @@
 ## Daily Agenda View
-Daily Agenda View is a compose multiplatform component useful for Apps that need to present daily events or daily activities type of views.
-<br/>
-Use cases:
-- Daily task planner apps.
-- Appointment reservation or booking Apps.
-- Tv Apps with show scheduling.
-- Music Festival Apps with events overlapping at the same time.
-- Great for TODO Apps to show all the TODOs in a day timeline view.
-- Anything that comes to your mind.
+Daily Agenda View is a clone of the **Microsoft Outlook App** Calendar screen. The component layouts daily events across an hourly based timeline. It is great for task planner apps, appointment apps, event schedule apps, calendar apps. Everything that comes to your mind. 
 
 ## Support and Compatibility
 
