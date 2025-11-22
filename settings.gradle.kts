@@ -29,7 +29,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = "DailyAgendaViewParent"
+rootProject.name = "daily-agenda-view"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":composeApp")
 include(":daily-agenda-view")

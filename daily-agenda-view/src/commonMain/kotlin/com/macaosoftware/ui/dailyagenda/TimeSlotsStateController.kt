@@ -43,4 +43,15 @@ class TimeSlotsStateController(
         return slots
     }
 
+    fun getTimeSlotsData(): Map<LocalTimeSlot, List<LocalTimeEvent>> {
+        val result = mutableMapOf<LocalTimeSlot, List<LocalTimeEvent>>()
+        dailyAgendaStateController.slotToDecimalEventMapSorted.forEach { entry ->
+            result.put(
+                key = entry.key.toLocalTimeSlot(),
+                value = entry.value.map { it.toLocalTimeEvent() }
+            )
+        }
+        return result
+    }
+
 }
