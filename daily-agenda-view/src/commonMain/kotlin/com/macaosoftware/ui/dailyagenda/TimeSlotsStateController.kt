@@ -19,14 +19,16 @@ class TimeSlotsStateController(
         eventsArrangement = eventsArrangement
     )
 
-    val timeSlotsDataUpdater = TimeSlotsDataUpdater(dailyAgendaStateController)
+    val timeSlotsDataUpdater = TimeSlotsDataUpdater(
+        dailyAgendaStateController = dailyAgendaStateController
+    )
 
     fun createSlots(
         firstSlotIndex: Int,
         amountOfSlotsInOneDay: Int
     ): List<Slot> {
         val slots = mutableListOf<Slot>()
-        for (i in firstSlotIndex .. amountOfSlotsInOneDay) {
+        for (i in firstSlotIndex..amountOfSlotsInOneDay) {
             val slotStartValue = i * slotUnit
             val title = fromDecimalValueToTimeText(slotStartValue, timeSlotConfig.useAmPm)
 

@@ -3,13 +3,17 @@ package com.macaosoftware.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -38,6 +42,7 @@ fun DayScheduleApp() {
             ) {
                 if (viewModel.showTimeSlots.value) {
                     TimeSlotExample(
+                        allDayEvents = viewModel.allDayEvents,
                         timeSlotsStateController = viewModel.timeSlotsStateController,
                         uiActionListener = viewModel.uiActionListener
                     )
@@ -62,11 +67,22 @@ fun DayScheduleApp() {
 
 @Composable
 private fun TimeSlotExample(
+    allDayEvents: List<AllDayEvent>,
     timeSlotsStateController: TimeSlotsStateController,
     uiActionListener: DayScheduleAppViewModel.UiActionListener
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        TimeSlotsView(timeSlotsStateController = timeSlotsStateController) { localTimeEvent ->
+    Column (modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.height(56.dp).fillMaxWidth().background(Color.LightGray)
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "All Day Events = ${allDayEvents.size}"
+            )
+        }
+        TimeSlotsView(
+            timeSlotsStateController = timeSlotsStateController
+        ) { localTimeEvent ->
             Box(
                 modifier = Modifier.fillMaxSize()
                     .padding(all = 2.dp)

@@ -14,8 +14,30 @@ import com.macaosoftware.ui.data.DecimalSegmentDataSample
 import com.macaosoftware.ui.data.TimeEventDataSample
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class DayScheduleAppViewModel {
+
+    val allDayEvents = mutableListOf<AllDayEvent>()
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun addAllDayEvent(
+        uuid: Uuid = Uuid.random(),
+        title: String,
+        description: String
+    ): Boolean {
+        return addAllDayEvent(
+            AllDayEvent(
+                uuid = uuid,
+                title = title,
+                description = description
+            )
+        )
+    }
+
+    fun addAllDayEvent(allDayEvent: AllDayEvent): Boolean {
+        return allDayEvents.add(allDayEvent)
+    }
 
     var showTimeSlots = mutableStateOf(true)
 

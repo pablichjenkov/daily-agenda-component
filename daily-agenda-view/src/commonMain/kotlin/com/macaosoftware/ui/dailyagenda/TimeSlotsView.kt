@@ -1,7 +1,6 @@
 package com.macaosoftware.ui.dailyagenda
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,22 +19,17 @@ fun TimeSlotsView(
     val currentTimeMarkerStateController = remember {
         CurrentTimeMarkerStateController(dailyAgendaState = dailyAgendaState)
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
+    Box(
+        modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
     ) {
-        Box {
-            SlotsLayer(dailyAgendaState = dailyAgendaState)
-            DailyAgendaRootLayout(
-                dailyAgendaState = dailyAgendaState,
-                eventContentProvider = { event ->
-                    // Intercept the event to apply the toLocalTimeEvent() transformation
-                    eventContentProvider.invoke(event.toLocalTimeEvent())
-                }
-            )
-            CurrentTimeMarkerView(currentTimeMarkerStateController)
-        }
+        SlotsLayer(dailyAgendaState = dailyAgendaState)
+        DailyAgendaRootLayout(
+            dailyAgendaState = dailyAgendaState,
+            eventContentProvider = { event ->
+                // Intercept the event to apply the toLocalTimeEvent() transformation
+                eventContentProvider.invoke(event.toLocalTimeEvent())
+            }
+        )
+        CurrentTimeMarkerView(currentTimeMarkerStateController)
     }
-
 }
