@@ -15,22 +15,24 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-internal fun SlotsLayer(dailyAgendaState: DailyAgendaState) {
+internal fun SlotsLayer(
+    slotsLayerState: SlotsLayerState
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        dailyAgendaState.slotToDecimalEventMap.keys.forEach { slot ->
-            SlotLine(slot = slot, config = dailyAgendaState.config)
+        slotsLayerState.slots.forEach { slot ->
+            SlotLine(slot = slot, slotHeight = slotsLayerState.slotHeight)
         }
     }
 }
 
 @Composable
-private fun SlotLine(slot: Slot, config: Config) {
+private fun SlotLine(slot: Slot, slotHeight: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(height = config.slotHeight.dp)
+            .height(height = slotHeight.dp)
     ) {
         HorizontalDivider(
             modifier = Modifier

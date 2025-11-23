@@ -130,3 +130,13 @@ fun TimeSlotConfig.toSlotConfig(): SlotConfig {
         timelineLeftPadding = timelineLeftPadding
     )
 }
+
+fun Config.toSlotConfig(): SlotConfig {
+    return SlotConfig(
+        initialSlotValue = initialSlotValue,
+        lastSlotValue = lastSlotValue,
+        slotScale = slotScale,
+        slotHeight = slotHeight,
+        timelineLeftPadding = timelineLeftPadding
+    )
+}

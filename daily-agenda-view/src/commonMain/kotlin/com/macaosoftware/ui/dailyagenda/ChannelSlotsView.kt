@@ -9,25 +9,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun TimeSlotsView(
-    timeSlotsStateController: TimeSlotsStateController,
-    eventContentProvider: @Composable (event: LocalTimeEvent) -> Unit
+fun ChannelSlotsView(
+    channelSlotsStateController: ChannelSlotsStateController,
+    eventContentProvider: @Composable (localTimeEvent: LocalTimeEvent) -> Unit
 ) {
-
-    val dailyAgendaState = timeSlotsStateController.dailyAgendaStateController.state.value
+    val channelSlotsState = channelSlotsStateController.state.value
     val scrollState = rememberScrollState()
     val currentTimeMarkerStateController = remember {
-        CurrentTimeMarkerStateController(slotConfig = timeSlotsStateController.slotConfig)
+        CurrentTimeMarkerStateController(slotConfig = channelSlotsState.channelSlotsConfig.toSlotConfig())
     }
     Box(
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
     ) {
-        SlotsLayer(slotsLayerState = dailyAgendaState.getSlotsLayerState())
-        DailyAgendaRootLayout(
-            dailyAgendaState = dailyAgendaState,
-            eventContentProvider = { event ->
+        SlotsLayer(slotsLayerState = channelSlotsState.getSlotsLayerState())
+        ChannelSlotsLayout(
+            channelSlotsState = channelSlotsState,
+            eventContentProvider = { localTimeEvent ->
                 // Intercept the event to apply the toLocalTimeEvent() transformation
-                eventContentProvider.invoke(event.toLocalTimeEvent())
+                eventContentProvider.invoke(localTimeEvent)
             }
         )
         CurrentTimeMarkerView(currentTimeMarkerStateController)

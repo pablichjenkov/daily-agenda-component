@@ -26,7 +26,7 @@ open class DecimalSlotsStateController(
         amountOfSlotsInOneDay: Int
     ): List<Slot> {
         val slots = mutableListOf<Slot>()
-        for (i in firstSlotIndex .. amountOfSlotsInOneDay) {
+        for (i in firstSlotIndex..amountOfSlotsInOneDay) {
             val slotStartValue = i * slotUnit
             slots.add(
                 Slot(
@@ -37,6 +37,10 @@ open class DecimalSlotsStateController(
             )
         }
         return slots
+    }
+
+    fun getTimeSlotsData(): Map<Slot, List<DecimalEvent>> {
+        return dailyAgendaStateController.slotToDecimalEventMapSorted
     }
 
 }

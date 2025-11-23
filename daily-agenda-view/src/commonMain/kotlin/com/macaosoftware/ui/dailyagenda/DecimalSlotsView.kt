@@ -19,7 +19,7 @@ fun DecimalSlotsView(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        SlotsLayer(dailyAgendaState = dailyAgendaState)
+        SlotsLayer(slotsLayerState = dailyAgendaState.getSlotsLayerState())
         DailyAgendaRootLayout(
             dailyAgendaState = dailyAgendaState,
             eventContentProvider = eventContentProvider

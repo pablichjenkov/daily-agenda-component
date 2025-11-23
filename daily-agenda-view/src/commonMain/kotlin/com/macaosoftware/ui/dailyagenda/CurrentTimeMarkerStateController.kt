@@ -12,17 +12,16 @@ import kotlin.time.ExperimentalTime
 data class CurrentTimeMarkerState(val offsetY: Dp)
 
 internal class CurrentTimeMarkerStateController(
-    val dailyAgendaState: DailyAgendaState
+    slotConfig: SlotConfig
 ) {
 
-    val config = dailyAgendaState.config
     val state = mutableStateOf(value = CurrentTimeMarkerState(offsetY = 0.dp))
 
     init {
         val localTime = getCurrentLocalTime()
         val currentTimeAsDecimal = fromLocalTimeToValue(localTime)
         val offsetY =
-            (currentTimeAsDecimal - config.initialSlotValue) * (config.slotScale * config.slotHeight)
+            (currentTimeAsDecimal - slotConfig.initialSlotValue) * (slotConfig.slotScale * slotConfig.slotHeight)
 
 
         state.value = CurrentTimeMarkerState(offsetY = offsetY.dp)
