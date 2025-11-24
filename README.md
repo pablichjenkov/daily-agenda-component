@@ -1,5 +1,5 @@
 ## Daily Agenda View
-Daily Agenda View is a clone of the **Microsoft Outlook App** Calendar screen. The component layouts daily events across an hourly based timeline. It is great for task planner apps, appointment apps, event schedule apps, calendar apps. Everything that comes to your mind. 
+Daily Agenda View is a clone of the calendar component seeing in the **Microsoft Outlook App** or **Microsoft Teams App**. The component layouts daily events across an hourly based timeline. It is great for task planner apps, appointment apps, event schedule apps, calendar apps.
 
 ## Support and Compatibility
 
