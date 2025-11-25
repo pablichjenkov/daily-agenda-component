@@ -1,14 +1,17 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.timeslots
 
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsBaseLayoutStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsDataUpdater
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class TimeSlotsDataUpdater internal constructor(
-    dailyAgendaStateController: DailyAgendaStateController
+    decimalSlotsBaseLayoutStateController: DecimalSlotsBaseLayoutStateController
 ) {
 
-    private val decimalSlotsDataUpdater = DecimalSlotsDataUpdater(dailyAgendaStateController)
+    private val decimalSlotsDataUpdater =
+        DecimalSlotsDataUpdater(decimalSlotsBaseLayoutStateController)
 
     @OptIn(ExperimentalUuidApi::class)
     fun addEvent(

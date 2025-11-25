@@ -1,4 +1,4 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 open class DecimalSlotsStateController(
     val slotConfig: SlotConfig,
@@ -13,13 +13,13 @@ open class DecimalSlotsStateController(
     private val amountOfSlotsInOneDay = slotConfig.lastSlotValue.toInt() * slotScale
 
 
-    internal val dailyAgendaStateController = DailyAgendaStateController(
+    internal val decimalSlotsBaseLayoutStateController = DecimalSlotsBaseLayoutStateController(
         slotConfig = slotConfig,
         slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
         eventsArrangement = eventsArrangement
     )
 
-    val decimalSlotsDataUpdater = DecimalSlotsDataUpdater(dailyAgendaStateController)
+    val decimalSlotsDataUpdater = DecimalSlotsDataUpdater(decimalSlotsBaseLayoutStateController)
 
     fun createSlots(
         firstSlotIndex: Int,
@@ -40,7 +40,7 @@ open class DecimalSlotsStateController(
     }
 
     fun getTimeSlotsData(): Map<Slot, List<DecimalEvent>> {
-        return dailyAgendaStateController.slotToDecimalEventMapSorted
+        return decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted
     }
 
 }

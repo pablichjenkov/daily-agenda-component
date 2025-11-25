@@ -1,4 +1,4 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -18,14 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
-import com.macaosoftware.ui.dailyagenda.DecimalSlotsView
-import com.macaosoftware.ui.dailyagenda.EventWidthType
-import com.macaosoftware.ui.dailyagenda.EventsArrangement
-import com.macaosoftware.ui.dailyagenda.SlotConfig
-import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
-import com.macaosoftware.ui.dailyagenda.TimeSlotsView
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsView
+import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
+import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
+import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
+import com.macaosoftware.ui.dailyagenda.epgslots.EpgChannelSlotsConfig
+import com.macaosoftware.ui.dailyagenda.epgslots.EpgSlotsStateController
+import com.macaosoftware.ui.dailyagenda.epgslots.EpgSlotsView
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsView
 import com.macaosoftware.ui.data.DecimalSegmentDataSample
+import com.macaosoftware.ui.ui.model.AllDayEvent
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
@@ -41,11 +45,12 @@ fun DayScheduleApp() {
                     .padding(paddingValues = innerPadding)
             ) {
                 if (viewModel.showTimeSlots.value) {
-                    TimeSlotExample(
-                        allDayEvents = viewModel.allDayEvents,
-                        timeSlotsStateController = viewModel.timeSlotsStateController,
-                        uiActionListener = viewModel.uiActionListener
-                    )
+//                    TimeSlotExample(
+//                        allDayEvents = viewModel.allDayEvents,
+//                        timeSlotsStateController = viewModel.timeSlotsStateController,
+//                        uiActionListener = viewModel.uiActionListener
+//                    )
+                    EpgSlotExample()
                 } else {
                     DecimalSlotExample(
                         decimalSlotsStateController = viewModel.decimalSlotsStateController,
@@ -140,6 +145,25 @@ private fun DecimalSlotExample(
             }
         }
 
+    }
+}
+
+@Composable
+private fun EpgSlotExample() {
+
+    val stateController = remember {
+        EpgSlotsStateController(
+            EpgChannelSlotsConfig()
+        )
+    }
+
+    EpgSlotsView(
+        epgSlotsStateController = stateController
+    ) { localTimeEvent ->
+        Text(
+            text = "${localTimeEvent.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
+            fontSize = 12.sp
+        )
     }
 }
 

@@ -1,5 +1,9 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.timeslots
 
+import com.macaosoftware.ui.dailyagenda.decimalslots.Config
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
+import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

@@ -1,4 +1,8 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.timeslots
+
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsBaseLayoutStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
+import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
 
 class TimeSlotsStateController(
     val timeSlotConfig: TimeSlotConfig = TimeSlotConfig(),
@@ -10,17 +14,16 @@ class TimeSlotsStateController(
     val slotHeight = slotConfig.slotHeight
     val slotUnit = 1.0F / slotScale
     val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
-
     private val amountOfSlotsInOneDay = (slotConfig.lastSlotValue * slotScale).toInt()
 
-    internal val dailyAgendaStateController = DailyAgendaStateController(
+    internal val decimalSlotsBaseLayoutStateController = DecimalSlotsBaseLayoutStateController(
         slotConfig = slotConfig,
         slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
         eventsArrangement = eventsArrangement
     )
 
     val timeSlotsDataUpdater = TimeSlotsDataUpdater(
-        dailyAgendaStateController = dailyAgendaStateController
+        decimalSlotsBaseLayoutStateController = decimalSlotsBaseLayoutStateController
     )
 
     fun createSlots(
@@ -45,7 +48,7 @@ class TimeSlotsStateController(
 
     fun getTimeSlotsData(): Map<LocalTimeSlot, List<LocalTimeEvent>> {
         val result = mutableMapOf<LocalTimeSlot, List<LocalTimeEvent>>()
-        dailyAgendaStateController.slotToDecimalEventMapSorted.forEach { entry ->
+        decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted.forEach { entry ->
             result.put(
                 key = entry.key.toLocalTimeSlot(),
                 value = entry.value.map { it.toLocalTimeEvent() }

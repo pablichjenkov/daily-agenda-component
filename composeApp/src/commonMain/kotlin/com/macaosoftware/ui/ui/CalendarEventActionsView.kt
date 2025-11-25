@@ -1,4 +1,4 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope

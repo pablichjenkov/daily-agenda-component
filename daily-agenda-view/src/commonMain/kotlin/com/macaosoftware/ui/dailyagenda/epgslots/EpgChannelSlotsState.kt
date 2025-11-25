@@ -1,0 +1,27 @@
+package com.macaosoftware.ui.dailyagenda.epgslots
+
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
+import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
+import com.macaosoftware.ui.dailyagenda.timeslots.toSlotConfig
+
+data class EpgChannel(
+    val name: String,
+    val events: List<DecimalEvent>
+)
+
+data class EpgChannelSlotsConfig(
+    val channelWidth: Int = 64,
+    val timeSlotConfig: TimeSlotConfig = TimeSlotConfig()
+)
+
+data class EpgChannelSlotsState(
+    val slots: List<Slot>,
+    val epgChannels: List<EpgChannel>,
+    val epgChannelSlotsConfig: EpgChannelSlotsConfig
+)
+
+internal fun EpgChannelSlotsConfig.toSlotConfig(): SlotConfig {
+    return timeSlotConfig.toSlotConfig()
+}

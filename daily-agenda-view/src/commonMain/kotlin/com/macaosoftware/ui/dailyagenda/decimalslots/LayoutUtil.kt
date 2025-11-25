@@ -1,4 +1,4 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -30,11 +30,11 @@ internal fun getEventHeight(decimalEvent: DecimalEvent, config: Config): Dp {
 private fun getMaximumNumberOfSiblingsInContainingSlots(
     decimalEvent: DecimalEvent,
     eventSlot: Slot,
-    dailyAgendaState: DailyAgendaState
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState
 ): Int {
-    val containingSlots = getSlotsIncludeStartSlot(decimalEvent, eventSlot, dailyAgendaState.slots)
+    val containingSlots = getSlotsIncludeStartSlot(decimalEvent, eventSlot, decimalSlotsBaseLayoutState.slots)
     val maxNumberOfEvents = containingSlots.fold(initial = 0) { maxNumberOfEvents, slot ->
-        val numberOfEvents = dailyAgendaState.slotInfoMap[slot]?.getTotalColumnSpans() ?: 0
+        val numberOfEvents = decimalSlotsBaseLayoutState.slotInfoMap[slot]?.getTotalColumnSpans() ?: 0
         if (numberOfEvents > maxNumberOfEvents) {
             numberOfEvents
         } else maxNumberOfEvents
@@ -66,12 +66,12 @@ internal fun getSlotsIncludeStartSlot(
  * Returns a list of the slots touched by the given event. Excluding its own start slot.
  * */
 internal fun getSlotsIgnoreStartSlot(
-    dailyAgendaState: DailyAgendaState,
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     decimalEvent: DecimalEvent,
     eventSlot: Slot
 ): List<Slot> {
-    val slotIndex = dailyAgendaState.slots.indexOf(eventSlot)
-    val laterSlots = dailyAgendaState.slots.subList(slotIndex + 1, dailyAgendaState.slots.size)
+    val slotIndex = decimalSlotsBaseLayoutState.slots.indexOf(eventSlot)
+    val laterSlots = decimalSlotsBaseLayoutState.slots.subList(slotIndex + 1, decimalSlotsBaseLayoutState.slots.size)
     val containingSlots = mutableListOf<Slot>()
     laterSlots.forEach { slot ->
         if (decimalEvent.endValue > slot.startValue + 0.0001) {
@@ -82,7 +82,7 @@ internal fun getSlotsIgnoreStartSlot(
 }
 
 internal fun updateEventOffsetX(
-    dailyAgendaState: DailyAgendaState,
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     decimalEvent: DecimalEvent,
     eventSlot: Slot,
     slotOffsetInfoMap: Map<Slot, OffsetInfo>,
@@ -91,7 +91,7 @@ internal fun updateEventOffsetX(
 ) {
 
     val eventSlops = getSlotsIgnoreStartSlot(
-        dailyAgendaState = dailyAgendaState,
+        decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
         decimalEvent = decimalEvent,
         eventSlot = eventSlot
     )
@@ -120,7 +120,7 @@ internal fun DecimalEvent.isSingleSlot(eventSlot: Slot): Boolean {
 }
 
 internal fun getEventWidthFromLeft(
-    dailyAgendaState: DailyAgendaState,
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     decimalEvent: DecimalEvent,
     eventSlot: Slot,
     amountOfEventsInSameSlot: Int,
@@ -130,7 +130,7 @@ internal fun getEventWidthFromLeft(
     slotRemainingWidth: Dp,
     minimumWidth: Dp
 ): Dp {
-    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, decimalEvent, eventSlot)) {
+    if (shouldReturnMinimumAllowedWidth(decimalSlotsBaseLayoutState.config, decimalEvent, eventSlot)) {
         return minimumWidth
     }
 
@@ -147,7 +147,7 @@ internal fun getEventWidthFromLeft(
         val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
             decimalEvent,
             eventSlot,
-            dailyAgendaState
+            decimalSlotsBaseLayoutState
         )
         (slotRemainingWidth / widthNumber)
     }
@@ -156,7 +156,7 @@ internal fun getEventWidthFromLeft(
 }
 
 internal fun getEventWidthFromRight(
-    dailyAgendaState: DailyAgendaState,
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     decimalEvent: DecimalEvent,
     eventSlot: Slot,
     amountOfEventsInSameSlot: Int,
@@ -166,7 +166,7 @@ internal fun getEventWidthFromRight(
     slotRemainingWidth: Dp,
     minimumWidth: Dp
 ): Dp {
-    if (shouldReturnMinimumAllowedWidth(dailyAgendaState.config, decimalEvent, eventSlot)) {
+    if (shouldReturnMinimumAllowedWidth(decimalSlotsBaseLayoutState.config, decimalEvent, eventSlot)) {
         return minimumWidth
     }
 
@@ -183,7 +183,7 @@ internal fun getEventWidthFromRight(
         val widthNumber = getMaximumNumberOfSiblingsInContainingSlots(
             decimalEvent,
             eventSlot,
-            dailyAgendaState
+            decimalSlotsBaseLayoutState
         )
         (slotRemainingWidth / widthNumber)
     }

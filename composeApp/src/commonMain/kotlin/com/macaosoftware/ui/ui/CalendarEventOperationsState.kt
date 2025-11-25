@@ -1,7 +1,7 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui
 
-import com.macaosoftware.ui.dailyagenda.DecimalEvent
-import com.macaosoftware.ui.dailyagenda.LocalTimeEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 
 sealed interface CalendarEventOperationsState {
     object Hidden : CalendarEventOperationsState

@@ -1,6 +1,6 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui.model
 
-import com.macaosoftware.ui.dailyagenda.LocalTimeEvent
+import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

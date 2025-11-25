@@ -1,7 +1,7 @@
 package com.macaosoftware.ui.data
 
-import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
-import com.macaosoftware.ui.dailyagenda.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

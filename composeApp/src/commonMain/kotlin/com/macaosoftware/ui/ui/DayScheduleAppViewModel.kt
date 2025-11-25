@@ -1,17 +1,18 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui
 
 import androidx.compose.runtime.mutableStateOf
-import com.macaosoftware.ui.dailyagenda.DecimalEvent
-import com.macaosoftware.ui.dailyagenda.DecimalSlotsStateController
-import com.macaosoftware.ui.dailyagenda.EventWidthType
-import com.macaosoftware.ui.dailyagenda.EventsArrangement
-import com.macaosoftware.ui.dailyagenda.LocalTimeEvent
-import com.macaosoftware.ui.dailyagenda.SlotConfig
-import com.macaosoftware.ui.dailyagenda.TimeSlotConfig
-import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
+import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
+import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
+import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import com.macaosoftware.ui.data.Constants
 import com.macaosoftware.ui.data.DecimalSegmentDataSample
 import com.macaosoftware.ui.data.TimeEventDataSample
+import com.macaosoftware.ui.ui.model.AllDayEvent
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

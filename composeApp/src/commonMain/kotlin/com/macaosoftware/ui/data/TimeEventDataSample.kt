@@ -1,7 +1,7 @@
 package com.macaosoftware.ui.data
 
-import com.macaosoftware.ui.dailyagenda.LocalTimeEvent
-import com.macaosoftware.ui.dailyagenda.TimeSlotsStateController
+import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
+import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

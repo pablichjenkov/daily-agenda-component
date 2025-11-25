@@ -1,4 +1,4 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -17,13 +17,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun DailyAgendaRootLayout(
-    dailyAgendaState: DailyAgendaState,
+internal fun DecimalSlotsBaseLayout(
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
-            .padding(start = dailyAgendaState.config.timelineLeftPadding.dp)
+            .padding(start = decimalSlotsBaseLayoutState.config.timelineLeftPadding.dp)
             .fillMaxSize()
     ) {
 
@@ -31,10 +31,10 @@ internal fun DailyAgendaRootLayout(
         val density = LocalDensity.current.density
 
         val eventContainerWidth =
-            (containerSize.width.dp / density) - dailyAgendaState.config.timelineLeftPadding.dp
+            (containerSize.width.dp / density) - decimalSlotsBaseLayoutState.config.timelineLeftPadding.dp
 
         LeftThenRightLayout(
-            dailyAgendaState = dailyAgendaState,
+            decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
             eventContainerWidth = eventContainerWidth,
             eventContentProvider = eventContentProvider
         )
@@ -43,14 +43,14 @@ internal fun DailyAgendaRootLayout(
 
 @Composable
 private fun LeftThenRightLayout(
-    dailyAgendaState: DailyAgendaState,
+    decimalSlotsBaseLayoutState: DecimalSlotsBaseLayoutState,
     eventContainerWidth: Dp,
     eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
-    val config = dailyAgendaState.config
-    val minimumWidth = eventContainerWidth / dailyAgendaState.maxColumns
+    val config = decimalSlotsBaseLayoutState.config
+    val minimumWidth = eventContainerWidth / decimalSlotsBaseLayoutState.maxColumns
 
-    var arrangeToTheLeft = remember(key1 = dailyAgendaState, key2 = eventContainerWidth) {
+    var arrangeToTheLeft = remember(key1 = decimalSlotsBaseLayoutState, key2 = eventContainerWidth) {
         when (config.eventsArrangement) {
             is EventsArrangement.LeftToRight,
             is EventsArrangement.MixedDirections -> true
@@ -59,15 +59,15 @@ private fun LeftThenRightLayout(
         }
     }
 
-    val offsetInfoMap = remember(key1 = dailyAgendaState, key2 = eventContainerWidth) {
+    val offsetInfoMap = remember(key1 = decimalSlotsBaseLayoutState, key2 = eventContainerWidth) {
         val offsetMap = mutableMapOf<Slot, OffsetInfo>()
-        for (i in 0..dailyAgendaState.slots.lastIndex) {
-            offsetMap.put(dailyAgendaState.slots[i], OffsetInfo())
+        for (i in 0..decimalSlotsBaseLayoutState.slots.lastIndex) {
+            offsetMap.put(decimalSlotsBaseLayoutState.slots[i], OffsetInfo())
         }
         offsetMap
     }
 
-    dailyAgendaState.slotToDecimalEventMap.entries.forEach { entry ->
+    decimalSlotsBaseLayoutState.slotToDecimalEventMap.entries.forEach { entry ->
         val slot = entry.key
         val numbersOfSlots = (slot.startValue - config.initialSlotValue) * config.slotScale
         val offsetY = (numbersOfSlots * config.slotHeight).dp
@@ -96,7 +96,7 @@ private fun LeftThenRightLayout(
                     val eventTranslation = getEventTranslationInSlot(event, slot, config)
                     val eventHeight = getEventHeight(event, config)
                     val eventWidth = getEventWidthFromLeft(
-                        dailyAgendaState = dailyAgendaState,
+                        decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
                         decimalEvent = event,
                         eventSlot = slot,
                         amountOfEventsInSameSlot = entry.value.size,
@@ -107,7 +107,7 @@ private fun LeftThenRightLayout(
                         minimumWidth = minimumWidth
                     )
                     updateEventOffsetX(
-                        dailyAgendaState = dailyAgendaState,
+                        decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
                         decimalEvent = event,
                         eventSlot = slot,
                         slotOffsetInfoMap = offsetInfoMap,
@@ -133,7 +133,7 @@ private fun LeftThenRightLayout(
                     val eventTranslation = getEventTranslationInSlot(event, slot, config)
                     val eventHeight = getEventHeight(event, config)
                     val eventWidth = getEventWidthFromRight(
-                        dailyAgendaState = dailyAgendaState,
+                        decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
                         decimalEvent = event,
                         eventSlot = slot,
                         amountOfEventsInSameSlot = entry.value.size,
@@ -144,7 +144,7 @@ private fun LeftThenRightLayout(
                         minimumWidth = minimumWidth
                     )
                     updateEventOffsetX(
-                        dailyAgendaState = dailyAgendaState,
+                        decimalSlotsBaseLayoutState = decimalSlotsBaseLayoutState,
                         decimalEvent = event,
                         eventSlot = slot,
                         slotOffsetInfoMap = offsetInfoMap,
@@ -161,7 +161,7 @@ private fun LeftThenRightLayout(
             }
         }
 
-        if (dailyAgendaState.config.eventsArrangement is EventsArrangement.MixedDirections) {
+        if (decimalSlotsBaseLayoutState.config.eventsArrangement is EventsArrangement.MixedDirections) {
             arrangeToTheLeft = !arrangeToTheLeft
         }
     }

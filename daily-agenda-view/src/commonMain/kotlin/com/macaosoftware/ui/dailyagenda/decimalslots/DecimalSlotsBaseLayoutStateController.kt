@@ -1,9 +1,9 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import androidx.compose.runtime.mutableStateOf
 import kotlin.math.abs
 
-class DailyAgendaStateController(
+class DecimalSlotsBaseLayoutStateController(
     val slots: List<Slot>,
     slotConfig: SlotConfig,
     private val eventsArrangement: EventsArrangement
@@ -22,7 +22,7 @@ class DailyAgendaStateController(
 
     internal val slotToDecimalEventMapSorted: MutableMap<Slot, MutableList<DecimalEvent>> = mutableMapOf()
 
-    val state = mutableStateOf<DailyAgendaState>(value = computeNextState())
+    val state = mutableStateOf<DecimalSlotsBaseLayoutState>(value = computeNextState())
 
     init {
         slots.forEach { slotToDecimalEventMapSorted[it] = mutableListOf() }
@@ -33,13 +33,13 @@ class DailyAgendaStateController(
             ?: error("startTime: $startValue must be between ${config.initialSlotValue} and ${config.lastSlotValue}")
     }
 
-    internal fun computeNextState(): DailyAgendaState {
+    internal fun computeNextState(): DecimalSlotsBaseLayoutState {
         val result = computeSlotInfo(
             slots = slots,
             slotToDecimalEventMap = slotToDecimalEventMapSorted,
             config = config
         )
-        return DailyAgendaState(
+        return DecimalSlotsBaseLayoutState(
             slots = slots,
             slotToDecimalEventMap = slotToDecimalEventMapSorted,
             slotInfoMap = result.slotInfoMap,

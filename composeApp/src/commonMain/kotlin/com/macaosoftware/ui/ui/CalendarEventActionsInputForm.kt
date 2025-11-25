@@ -1,4 +1,4 @@
-package com.macaosoftware.ui
+package com.macaosoftware.ui.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +26,7 @@ fun CalendarEventActionsInputForm(
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
-    when (val state = calendarEventOperationsState) {
+    when (calendarEventOperationsState) {
         CalendarEventOperationsState.AddTimedEventRequested -> {
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
@@ -158,9 +158,9 @@ fun CalendarEventActionsInputForm(
         }
 
         is CalendarEventOperationsState.RemoveTimedEventRequested -> {
-            val eventTitleInitialValue = when (state) {
+            val eventTitleInitialValue = when (calendarEventOperationsState) {
                 CalendarEventOperationsState.RemoveTimedEventRequested.Empty -> ""
-                is CalendarEventOperationsState.RemoveTimedEventRequested.WithEvent -> state.localTimeEvent.title
+                is CalendarEventOperationsState.RemoveTimedEventRequested.WithEvent -> calendarEventOperationsState.localTimeEvent.title
             }
             ModalBottomSheet(
                 onDismissRequest = { uiActionListener.dismissInputForm() },
@@ -195,10 +195,10 @@ fun CalendarEventActionsInputForm(
         }
 
         is CalendarEventOperationsState.RemoveDecimalEventRequested -> {
-            val eventTitleInitialValue = when (state) {
+            val eventTitleInitialValue = when (calendarEventOperationsState) {
                 CalendarEventOperationsState.RemoveDecimalEventRequested.Empty -> ""
                 is CalendarEventOperationsState.RemoveDecimalEventRequested.WithEvent -> {
-                    state.decimalEvent.title
+                    calendarEventOperationsState.decimalEvent.title
                 }
             }
             ModalBottomSheet(

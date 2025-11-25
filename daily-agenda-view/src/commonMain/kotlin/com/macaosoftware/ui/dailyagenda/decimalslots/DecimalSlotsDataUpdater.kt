@@ -1,10 +1,10 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 open class DecimalSlotsDataUpdater internal constructor(
-    val dailyAgendaStateController: DailyAgendaStateController
+    val decimalSlotsBaseLayoutStateController: DecimalSlotsBaseLayoutStateController
 ) {
 
     private var isListOperation = false
@@ -31,9 +31,9 @@ open class DecimalSlotsDataUpdater internal constructor(
     @OptIn(ExperimentalUuidApi::class)
     fun addDecimalEvent(decimalEvent: DecimalEvent): Boolean {
         val eventSlot =
-            dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
+            decimalSlotsBaseLayoutStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
-            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot] ?: mutableListOf()
+            decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted[eventSlot] ?: mutableListOf()
 
         var insertionIndex = 0
         for (idx in siblingEvents.lastIndex downTo 0) {
@@ -47,7 +47,7 @@ open class DecimalSlotsDataUpdater internal constructor(
 
     fun addDecimalEventList(startValue: Float, segments: List<DecimalEvent>) {
         isListOperation = true
-        val slot = dailyAgendaStateController.getSlotForValue(startValue = startValue)
+        val slot = decimalSlotsBaseLayoutStateController.getSlotForValue(startValue = startValue)
 
         if (slotToDecimalEventMapSortedTemp.contains(slot)) {
             slotToDecimalEventMapSortedTemp[slot]!!.addAll(elements = segments)
@@ -59,7 +59,7 @@ open class DecimalSlotsDataUpdater internal constructor(
     fun traverseSlotsForDecimalEvent(predicate: (DecimalEvent) -> Boolean): SlotTraversalResult? {
         var decimalEventMatching: DecimalEvent? = null
         val entryMatching =
-            dailyAgendaStateController.slotToDecimalEventMapSorted.entries.find { entry ->
+            decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted.entries.find { entry ->
                 decimalEventMatching = entry.value.find { event -> predicate.invoke(event) }
                 decimalEventMatching != null
             }
@@ -81,9 +81,9 @@ open class DecimalSlotsDataUpdater internal constructor(
 
     fun removeDecimalEvent(decimalEvent: DecimalEvent): Boolean {
         val eventSlot =
-            dailyAgendaStateController.getSlotForValue(startValue = decimalEvent.startValue)
+            decimalSlotsBaseLayoutStateController.getSlotForValue(startValue = decimalEvent.startValue)
         val siblingEvents =
-            dailyAgendaStateController.slotToDecimalEventMapSorted[eventSlot] ?: return false
+            decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted[eventSlot] ?: return false
 
         return siblingEvents.remove(decimalEvent)
     }
@@ -94,11 +94,11 @@ open class DecimalSlotsDataUpdater internal constructor(
             val slotToDecimalEventMapSortedMerge: MutableMap<Slot, MutableList<DecimalEvent>> =
                 mutableMapOf()
 
-            for (slot in dailyAgendaStateController.slots) {
+            for (slot in decimalSlotsBaseLayoutStateController.slots) {
                 val addedSegments: MutableList<DecimalEvent>? =
                     slotToDecimalEventMapSortedTemp[slot]
                 val existingSegments: MutableList<DecimalEvent> =
-                    dailyAgendaStateController.slotToDecimalEventMapSorted[slot]!!
+                    decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted[slot]!!
 
                 if (addedSegments != null) {
                     addedSegments.addAll(existingSegments)
@@ -123,7 +123,7 @@ open class DecimalSlotsDataUpdater internal constructor(
             slotToDecimalEventMapSortedMerge.entries.forEach { entry ->
                 val eventsSortedByEndTime =
                     entry.value.sortedWith(endTimeComparator).toMutableList()
-                dailyAgendaStateController.slotToDecimalEventMapSorted.put(
+                decimalSlotsBaseLayoutStateController.slotToDecimalEventMapSorted.put(
                     entry.key,
                     eventsSortedByEndTime
                 )
@@ -131,7 +131,7 @@ open class DecimalSlotsDataUpdater internal constructor(
             isListOperation = false
         }
 
-        dailyAgendaStateController.updateState()
+        decimalSlotsBaseLayoutStateController.updateState()
     }
 
     fun postUpdate(block: DecimalSlotsDataUpdater.() -> Unit) {

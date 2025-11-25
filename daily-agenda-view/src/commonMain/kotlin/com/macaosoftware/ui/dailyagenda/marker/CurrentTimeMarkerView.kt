@@ -1,4 +1,4 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.marker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

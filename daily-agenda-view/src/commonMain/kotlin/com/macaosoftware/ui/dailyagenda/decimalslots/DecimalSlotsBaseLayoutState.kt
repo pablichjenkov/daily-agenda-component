@@ -1,11 +1,11 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-data class DailyAgendaState(
+data class DecimalSlotsBaseLayoutState(
     val slots: List<Slot>,
     val slotToDecimalEventMap: Map<Slot, List<DecimalEvent>>,
     val slotInfoMap: Map<Slot, SlotInfo>,

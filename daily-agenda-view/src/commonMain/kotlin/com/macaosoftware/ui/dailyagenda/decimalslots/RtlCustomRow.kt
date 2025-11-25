@@ -1,4 +1,4 @@
-package com.macaosoftware.ui.dailyagenda
+package com.macaosoftware.ui.dailyagenda.decimalslots
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
