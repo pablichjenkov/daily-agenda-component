@@ -22,10 +22,10 @@ class DecimalSlotsBaseLayoutStateController(
 
     internal val slotToDecimalEventMapSorted: MutableMap<Slot, MutableList<DecimalEvent>> = mutableMapOf()
 
-    val state = mutableStateOf<DecimalSlotsBaseLayoutState>(value = computeNextState())
+    internal val state = mutableStateOf<DecimalSlotsBaseLayoutState?>(value = null)
 
     init {
-        slots.forEach { slotToDecimalEventMapSorted[it] = mutableListOf() }
+        slots.forEach { slot -> slotToDecimalEventMapSorted[slot] = mutableListOf() }
     }
 
     fun getSlotForValue(startValue: Float): Slot {
@@ -33,7 +33,7 @@ class DecimalSlotsBaseLayoutStateController(
             ?: error("startTime: $startValue must be between ${config.initialSlotValue} and ${config.lastSlotValue}")
     }
 
-    internal fun computeNextState(): DecimalSlotsBaseLayoutState {
+    private fun computeNextState(): DecimalSlotsBaseLayoutState {
         val result = computeSlotInfo(
             slots = slots,
             slotToDecimalEventMap = slotToDecimalEventMapSorted,

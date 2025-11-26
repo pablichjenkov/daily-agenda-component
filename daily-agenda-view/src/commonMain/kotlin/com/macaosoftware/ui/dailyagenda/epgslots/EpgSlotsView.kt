@@ -18,7 +18,7 @@ fun EpgSlotsView(
     epgSlotsStateController: EpgSlotsStateController,
     eventContentProvider: @Composable (localTimeEvent: LocalTimeEvent) -> Unit
 ) {
-    val channelSlotsState = epgSlotsStateController.state.value
+    val channelSlotsState = epgSlotsStateController.state.value ?: return
     val scrollState = rememberScrollState()
     val currentTimeMarkerStateController = remember {
         CurrentTimeMarkerStateController(slotConfig = channelSlotsState.epgChannelSlotsConfig.toSlotConfig())
@@ -28,7 +28,7 @@ fun EpgSlotsView(
     ) {
         SlotsLayer(slotsLayerState = channelSlotsState.getSlotsLayerState())
         ChannelSlotsLayout(
-            epgChannelSlotsState = channelSlotsState,
+            epgSlotsState = channelSlotsState,
             eventContentProvider = { localTimeEvent ->
                 // Intercept the event to apply the toLocalTimeEvent() transformation
                 eventContentProvider.invoke(localTimeEvent)

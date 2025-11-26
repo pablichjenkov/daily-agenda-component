@@ -1,8 +1,14 @@
 package com.macaosoftware.ui.dailyagenda.epgslots
 
 class EpgSlotsDataUpdater internal constructor(
-    epgSlotsStateController: EpgSlotsStateController
+    val epgSlotsStateController: EpgSlotsStateController
 ) {
 
+    fun addEvent(epgChannel: EpgChannel): Boolean {
+        return epgSlotsStateController.epgChannels.add(epgChannel)
+    }
 
+    fun commit() {
+        epgSlotsStateController.updateState()
+    }
 }

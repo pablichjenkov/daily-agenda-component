@@ -1,12 +1,13 @@
 package com.macaosoftware.ui.dailyagenda.epgslots
 
 import androidx.compose.runtime.mutableStateOf
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsBaseLayoutState
 import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
 import com.macaosoftware.ui.dailyagenda.timeslots.fromDecimalValueToTimeText
 import com.macaosoftware.ui.dailyagenda.timeslots.toSlotConfig
 
 class EpgSlotsStateController(
-    epgChannelSlotsConfig: EpgChannelSlotsConfig
+    val epgChannelSlotsConfig: EpgChannelSlotsConfig
 ) {
 
     val timeSlotConfig = epgChannelSlotsConfig.timeSlotConfig
@@ -17,15 +18,15 @@ class EpgSlotsStateController(
     val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
     private val amountOfSlotsInOneDay = (slotConfig.lastSlotValue * slotScale).toInt()
 
-    val state = mutableStateOf<EpgChannelSlotsState>(createInitialValue())
+    private val slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay)
 
-    fun createInitialValue(): EpgChannelSlotsState {
-        return EpgChannelSlotsState(
-            slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
-            epgChannels = emptyList(),
-            epgChannelSlotsConfig = EpgChannelSlotsConfig()
-        )
-    }
+    internal val epgChannels: MutableList<EpgChannel> = mutableListOf()
+
+    val state = mutableStateOf<EpgSlotsState?>(value = null)
+
+    val epgSlotsDataUpdater = EpgSlotsDataUpdater(
+        epgSlotsStateController = this
+    )
 
     fun createSlots(
         firstSlotIndex: Int,
@@ -45,6 +46,18 @@ class EpgSlotsStateController(
             )
         }
         return slots
+    }
+
+    private fun computeNextState(): EpgSlotsState {
+        return EpgSlotsState(
+            slots = slots,
+            epgChannels = epgChannels,
+            epgChannelSlotsConfig = epgChannelSlotsConfig
+        )
+    }
+
+    internal fun updateState() {
+        state.value = computeNextState()
     }
 
 }

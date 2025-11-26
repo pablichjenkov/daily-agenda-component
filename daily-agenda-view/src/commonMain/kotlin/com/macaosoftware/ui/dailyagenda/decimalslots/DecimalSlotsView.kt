@@ -14,7 +14,8 @@ fun DecimalSlotsView(
     decimalSlotsStateController: DecimalSlotsStateController,
     eventContentProvider: @Composable (decimalEvent: DecimalEvent) -> Unit
 ) {
-    val dailyAgendaState = decimalSlotsStateController.decimalSlotsBaseLayoutStateController.state.value
+    val dailyAgendaState =
+        decimalSlotsStateController.decimalSlotsBaseLayoutStateController.state.value ?: return
     val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
