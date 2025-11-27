@@ -3,7 +3,7 @@ package com.macaosoftware.ui.dailyagenda.timeslots
 import com.macaosoftware.ui.dailyagenda.decimalslots.Config
 import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
 import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
-import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotConfig
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -125,8 +125,8 @@ fun fromDecimalValueToTimeText(
     return "$hourUnitsFormatted:$minutesTwoDigitFormat:$amPmSuffix"
 }
 
-fun TimeSlotConfig.toSlotConfig(): SlotConfig {
-    return SlotConfig(
+fun TimeSlotConfig.toSlotConfig(): DecimalSlotConfig {
+    return DecimalSlotConfig(
         initialSlotValue = fromLocalTimeToValue(startSlotTime),
         lastSlotValue = fromLocalTimeToValue(endSlotTime),
         slotScale = slotScale,
@@ -135,8 +135,8 @@ fun TimeSlotConfig.toSlotConfig(): SlotConfig {
     )
 }
 
-fun Config.toSlotConfig(): SlotConfig {
-    return SlotConfig(
+fun Config.toSlotConfig(): DecimalSlotConfig {
+    return DecimalSlotConfig(
         initialSlotValue = initialSlotValue,
         lastSlotValue = lastSlotValue,
         slotScale = slotScale,

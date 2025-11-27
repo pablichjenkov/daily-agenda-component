@@ -1,20 +1,20 @@
 package com.macaosoftware.ui.dailyagenda.decimalslots
 
 open class DecimalSlotsStateController(
-    val slotConfig: SlotConfig,
+    val decimalSlotConfig: DecimalSlotConfig,
     eventsArrangement: EventsArrangement = EventsArrangement.MixedDirections()
 ) {
 
-    val slotScale = slotConfig.slotScale
-    val slotHeight = slotConfig.slotHeight
+    val slotScale = decimalSlotConfig.slotScale
+    val slotHeight = decimalSlotConfig.slotHeight
     val slotUnit = 1.0F / slotScale
-    val firstSlotIndex = (slotScale * slotConfig.initialSlotValue.toInt())
+    val firstSlotIndex = (slotScale * decimalSlotConfig.initialSlotValue.toInt())
 
-    private val amountOfSlotsInOneDay = slotConfig.lastSlotValue.toInt() * slotScale
+    private val amountOfSlotsInOneDay = decimalSlotConfig.lastSlotValue.toInt() * slotScale
 
 
     internal val decimalSlotsBaseLayoutStateController = DecimalSlotsBaseLayoutStateController(
-        slotConfig = slotConfig,
+        decimalSlotConfig = decimalSlotConfig,
         slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
         eventsArrangement = eventsArrangement
     )

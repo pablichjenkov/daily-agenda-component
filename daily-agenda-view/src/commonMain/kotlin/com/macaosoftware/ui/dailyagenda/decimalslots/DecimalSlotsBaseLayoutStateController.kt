@@ -5,18 +5,18 @@ import kotlin.math.abs
 
 class DecimalSlotsBaseLayoutStateController(
     val slots: List<Slot>,
-    slotConfig: SlotConfig,
+    decimalSlotConfig: DecimalSlotConfig,
     private val eventsArrangement: EventsArrangement
 ) {
 
-    val slotUnit = 1.0F / slotConfig.slotScale
+    val slotUnit = 1.0F / decimalSlotConfig.slotScale
 
     private val config = Config(
         eventsArrangement = eventsArrangement,
         initialSlotValue = slots[0].startValue,
         lastSlotValue = slots[slots.lastIndex].startValue,
-        slotScale = slotConfig.slotScale,
-        slotHeight = slotConfig.slotHeight,
+        slotScale = decimalSlotConfig.slotScale,
+        slotHeight = decimalSlotConfig.slotHeight,
         timelineLeftPadding = 72
     )
 

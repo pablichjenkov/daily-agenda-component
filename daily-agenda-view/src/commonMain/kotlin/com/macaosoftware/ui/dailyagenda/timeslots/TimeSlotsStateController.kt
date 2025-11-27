@@ -17,7 +17,7 @@ class TimeSlotsStateController(
     private val amountOfSlotsInOneDay = (slotConfig.lastSlotValue * slotScale).toInt()
 
     internal val decimalSlotsBaseLayoutStateController = DecimalSlotsBaseLayoutStateController(
-        slotConfig = slotConfig,
+        decimalSlotConfig = slotConfig,
         slots = createSlots(firstSlotIndex, amountOfSlotsInOneDay),
         eventsArrangement = eventsArrangement
     )

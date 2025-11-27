@@ -17,10 +17,11 @@ import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
 
 @Composable
 internal fun SlotsLayer(
+    modifier: Modifier = Modifier,
     slotsLayerState: SlotsLayerState
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         slotsLayerState.slots.forEach { slot ->
             SlotLine(slot = slot, slotHeight = slotsLayerState.slotHeight)

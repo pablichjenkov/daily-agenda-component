@@ -61,7 +61,7 @@ internal class OffsetInfo(
     fun getTotalRightOffset() = rightStartOffset + rightAccumulated
 }
 
-data class SlotConfig(
+data class DecimalSlotConfig(
     val initialSlotValue: Float = 0.0F,
     val lastSlotValue: Float = 20.0F,
     val slotScale: Int = 2,

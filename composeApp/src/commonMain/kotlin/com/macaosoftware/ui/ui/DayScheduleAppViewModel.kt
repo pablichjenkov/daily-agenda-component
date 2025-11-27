@@ -6,7 +6,7 @@ import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
 import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
-import com.macaosoftware.ui.dailyagenda.decimalslots.SlotConfig
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import com.macaosoftware.ui.data.Constants
@@ -60,7 +60,7 @@ class DayScheduleAppViewModel {
 
     val decimalSlotsStateController by lazy {
         DecimalSlotsStateController(
-            slotConfig = SlotConfig(
+            decimalSlotConfig = DecimalSlotConfig(
                 initialSlotValue = 7.0F,
                 lastSlotValue = 19.0F,
                 slotScale = 2,

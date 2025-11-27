@@ -12,12 +12,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun CurrentTimeMarkerView(
+    modifier: Modifier = Modifier,
     currentTimeMarkerStateController: CurrentTimeMarkerStateController
 ) {
 
     val state = currentTimeMarkerStateController.state
 
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .offset(y = state.value.offsetY)
         .height(height = 1.dp)
         .fillMaxWidth()

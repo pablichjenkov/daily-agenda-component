@@ -22,7 +22,7 @@ fun TimeSlotsView(
         timeSlotsStateController.decimalSlotsBaseLayoutStateController.state.value ?: return
     val scrollState = rememberScrollState()
     val currentTimeMarkerStateController = remember {
-        CurrentTimeMarkerStateController(slotConfig = timeSlotsStateController.slotConfig)
+        CurrentTimeMarkerStateController(decimalSlotConfig = timeSlotsStateController.slotConfig)
     }
     Box(
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
@@ -35,6 +35,8 @@ fun TimeSlotsView(
                 eventContentProvider.invoke(event.toLocalTimeEvent())
             }
         )
-        CurrentTimeMarkerView(currentTimeMarkerStateController)
+        CurrentTimeMarkerView(
+            currentTimeMarkerStateController = currentTimeMarkerStateController
+        )
     }
 }

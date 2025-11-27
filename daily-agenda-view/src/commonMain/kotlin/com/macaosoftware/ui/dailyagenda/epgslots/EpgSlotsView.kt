@@ -2,16 +2,18 @@ package com.macaosoftware.ui.dailyagenda.epgslots
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.macaosoftware.ui.dailyagenda.marker.CurrentTimeMarkerStateController
 import com.macaosoftware.ui.dailyagenda.marker.CurrentTimeMarkerView
-import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 import com.macaosoftware.ui.dailyagenda.slotslayer.SlotsLayer
 import com.macaosoftware.ui.dailyagenda.slotslayer.getSlotsLayerState
+import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 
 @Composable
 fun EpgSlotsView(
@@ -21,12 +23,15 @@ fun EpgSlotsView(
     val channelSlotsState = epgSlotsStateController.state.value ?: return
     val scrollState = rememberScrollState()
     val currentTimeMarkerStateController = remember {
-        CurrentTimeMarkerStateController(slotConfig = channelSlotsState.epgChannelSlotsConfig.toSlotConfig())
+        CurrentTimeMarkerStateController(decimalSlotConfig = channelSlotsState.epgChannelSlotConfig.toSlotConfig())
     }
     Box(
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
     ) {
-        SlotsLayer(slotsLayerState = channelSlotsState.getSlotsLayerState())
+        SlotsLayer(
+            modifier = Modifier.padding(top = channelSlotsState.epgChannelSlotConfig.topHeaderHeight.dp),
+            slotsLayerState = channelSlotsState.getSlotsLayerState()
+        )
         ChannelSlotsLayout(
             epgSlotsState = channelSlotsState,
             eventContentProvider = { localTimeEvent ->
@@ -34,6 +39,9 @@ fun EpgSlotsView(
                 eventContentProvider.invoke(localTimeEvent)
             }
         )
-        CurrentTimeMarkerView(currentTimeMarkerStateController)
+        CurrentTimeMarkerView(
+            modifier = Modifier.padding(top = channelSlotsState.epgChannelSlotConfig.topHeaderHeight.dp),
+            currentTimeMarkerStateController = currentTimeMarkerStateController
+        )
     }
 }

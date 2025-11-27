@@ -19,6 +19,6 @@ internal fun DecimalSlotsBaseLayoutState.getSlotsLayerState(): SlotsLayerState {
 internal fun EpgSlotsState.getSlotsLayerState(): SlotsLayerState {
     return SlotsLayerState(
         slots = slots,
-        slotHeight = epgChannelSlotsConfig.timeSlotConfig.slotHeight
+        slotHeight = epgChannelSlotConfig.timeSlotConfig.slotHeight
     )
 }

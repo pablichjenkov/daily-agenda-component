@@ -1,16 +1,15 @@
 package com.macaosoftware.ui.dailyagenda.epgslots
 
 import androidx.compose.runtime.mutableStateOf
-import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsBaseLayoutState
 import com.macaosoftware.ui.dailyagenda.decimalslots.Slot
 import com.macaosoftware.ui.dailyagenda.timeslots.fromDecimalValueToTimeText
 import com.macaosoftware.ui.dailyagenda.timeslots.toSlotConfig
 
 class EpgSlotsStateController(
-    val epgChannelSlotsConfig: EpgChannelSlotsConfig
+    val epgChannelSlotConfig: EpgChannelSlotConfig
 ) {
 
-    val timeSlotConfig = epgChannelSlotsConfig.timeSlotConfig
+    val timeSlotConfig = epgChannelSlotConfig.timeSlotConfig
     val slotConfig = timeSlotConfig.toSlotConfig()
     val slotScale = slotConfig.slotScale
     val slotHeight = slotConfig.slotHeight
@@ -52,7 +51,7 @@ class EpgSlotsStateController(
         return EpgSlotsState(
             slots = slots,
             epgChannels = epgChannels,
-            epgChannelSlotsConfig = epgChannelSlotsConfig
+            epgChannelSlotConfig = epgChannelSlotConfig
         )
     }
 
