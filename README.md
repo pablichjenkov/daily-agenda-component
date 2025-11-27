@@ -24,6 +24,7 @@ Daily Agenda View is a clone of the calendar component seeing in the **Microsoft
 
 | Agenda Version | Kotlin Version | CMP Version |
 |---------------|--------|-------|
+| 1.3.0 | 2.2.21 | 1.9.3 |
 | 1.2.0 | 2.2.21 | 1.9.3 |
 
   </td>
