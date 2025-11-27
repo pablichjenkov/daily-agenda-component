@@ -6,17 +6,23 @@ import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 sealed interface CalendarEventOperationsState {
     object Hidden : CalendarEventOperationsState
 
+    class ShowTimedEventRequested(val localTimeEvent: LocalTimeEvent) :
+        CalendarEventOperationsState
+
     object AddTimedEventRequested : CalendarEventOperationsState
 
-    sealed interface RemoveTimedEventRequested : CalendarEventOperationsState {
-        object Empty : RemoveTimedEventRequested
-        class WithEvent(val localTimeEvent: LocalTimeEvent) : RemoveTimedEventRequested
-    }
+    class RemoveTimedEventRequested(val localTimeEvent: LocalTimeEvent) :
+        CalendarEventOperationsState
+
+    class ShowDecimalEventRequested(val decimalEvent: DecimalEvent) : CalendarEventOperationsState
 
     object AddDecimalEventRequested : CalendarEventOperationsState
 
-    sealed interface RemoveDecimalEventRequested : CalendarEventOperationsState {
-        object Empty : RemoveDecimalEventRequested
-        class WithEvent(val decimalEvent: DecimalEvent) : RemoveDecimalEventRequested
-    }
+    class RemoveDecimalEventRequested(val decimalEvent: DecimalEvent) : CalendarEventOperationsState
+
+    class ShowEpgEventRequested(val epgEvent: LocalTimeEvent) : CalendarEventOperationsState
+
+    object AddEpgEventRequested : CalendarEventOperationsState
+
+    class RemoveEpgEventRequested(val epgEvent: LocalTimeEvent) : CalendarEventOperationsState
 }

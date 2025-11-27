@@ -1,12 +1,14 @@
 package com.macaosoftware.ui.ui
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
+import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotConfig
 import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
 import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
-import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import com.macaosoftware.ui.data.Constants
@@ -18,6 +20,8 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class DayScheduleAppViewModel {
+
+    var slotsViewType by mutableStateOf<SlotsViewType>(value = SlotsViewType.Timeline)
 
     val allDayEvents = mutableListOf<AllDayEvent>()
 
@@ -39,8 +43,6 @@ class DayScheduleAppViewModel {
     fun addAllDayEvent(allDayEvent: AllDayEvent): Boolean {
         return allDayEvents.add(allDayEvent)
     }
-
-    var showTimeSlots = mutableStateOf(true)
 
     val timeSlotsStateController by lazy {
         TimeSlotsStateController(
@@ -78,8 +80,24 @@ class DayScheduleAppViewModel {
 
     @OptIn(ExperimentalUuidApi::class)
     val uiActionListener = object : UiActionListener {
-        override fun showAddTimeEventForm() {
-            calendarEventOperationsState.value = CalendarEventOperationsState.AddTimedEventRequested
+
+        override fun showAddEventForm(slotsViewType: SlotsViewType) {
+            when (slotsViewType) {
+                SlotsViewType.Decimal -> {
+                    calendarEventOperationsState.value =
+                        CalendarEventOperationsState.AddDecimalEventRequested
+                }
+
+                SlotsViewType.Timeline -> {
+                    calendarEventOperationsState.value =
+                        CalendarEventOperationsState.AddTimedEventRequested
+                }
+
+                SlotsViewType.Epg -> {
+                    calendarEventOperationsState.value =
+                        CalendarEventOperationsState.AddEpgEventRequested
+                }
+            }
         }
 
         override fun confirmedAddTimeEvent(
@@ -98,14 +116,9 @@ class DayScheduleAppViewModel {
             }
         }
 
-        override fun showRemoveTimeEventForm() {
-            calendarEventOperationsState.value =
-                CalendarEventOperationsState.RemoveTimedEventRequested.Empty
-        }
-
         override fun showRemoveTimeEventForm(timeEvent: LocalTimeEvent) {
             calendarEventOperationsState.value =
-                CalendarEventOperationsState.RemoveTimedEventRequested.WithEvent(timeEvent)
+                CalendarEventOperationsState.RemoveTimedEventRequested(localTimeEvent = timeEvent)
         }
 
         override fun confirmedRemoveTimeEvent(eventTitle: String) {
@@ -114,11 +127,6 @@ class DayScheduleAppViewModel {
                 println("Pablo confirmRemoveTimeEvent executing")
                 removeEventByTitle(eventTitle = eventTitle)
             }
-        }
-
-        override fun showAddDecimalSegmentForm() {
-            calendarEventOperationsState.value =
-                CalendarEventOperationsState.AddDecimalEventRequested
         }
 
         override fun confirmedAddDecimalSegment(
@@ -137,14 +145,9 @@ class DayScheduleAppViewModel {
             }
         }
 
-        override fun showRemoveDecimalEventForm() {
-            calendarEventOperationsState.value =
-                CalendarEventOperationsState.RemoveDecimalEventRequested.Empty
-        }
-
         override fun showRemoveDecimalEventForm(decimalEvent: DecimalEvent) {
             calendarEventOperationsState.value =
-                CalendarEventOperationsState.RemoveDecimalEventRequested.WithEvent(decimalEvent)
+                CalendarEventOperationsState.RemoveDecimalEventRequested(decimalEvent)
         }
 
         override fun confirmedRemoveDecimalEvent(eventTitle: String) {
@@ -154,8 +157,9 @@ class DayScheduleAppViewModel {
             }
         }
 
-        override fun toggleAxisType() {
-            showTimeSlots.value = !showTimeSlots.value
+        override fun toggleAxisType(slotsViewType: SlotsViewType) {
+            if (this@DayScheduleAppViewModel.slotsViewType == slotsViewType) return
+            this@DayScheduleAppViewModel.slotsViewType = slotsViewType
         }
 
         override fun dismissInputForm() {
@@ -163,7 +167,8 @@ class DayScheduleAppViewModel {
         }
 
         override fun onTimeEventClicked(timeEvent: LocalTimeEvent) {
-            // showRemoveTimeEventForm()
+            calendarEventOperationsState.value =
+                CalendarEventOperationsState.ShowTimedEventRequested(localTimeEvent = timeEvent)
         }
 
         override fun onTimeEventDoubleClicked(timeEvent: LocalTimeEvent) {
@@ -175,7 +180,8 @@ class DayScheduleAppViewModel {
         }
 
         override fun onDecimalEventClicked(decimalEvent: DecimalEvent) {
-            // showRemoveDecimalEventForm()
+            calendarEventOperationsState.value =
+                CalendarEventOperationsState.ShowDecimalEventRequested(decimalEvent)
         }
 
         override fun onDecimalEventDoubleClicked(decimalEvent: DecimalEvent) {
@@ -185,20 +191,32 @@ class DayScheduleAppViewModel {
         override fun onDecimalEventLongClicked(decimalEvent: DecimalEvent) {
             showRemoveDecimalEventForm(decimalEvent)
         }
+
+        override fun onEpgEventClicked(localTimeEvent: LocalTimeEvent) {
+            calendarEventOperationsState.value =
+                CalendarEventOperationsState.ShowEpgEventRequested(epgEvent = localTimeEvent)
+        }
+
+        override fun onEpgEventDoubleClicked(localTimeEvent: LocalTimeEvent) {
+            calendarEventOperationsState.value =
+                CalendarEventOperationsState.RemoveEpgEventRequested(epgEvent = localTimeEvent)
+        }
+
+        override fun onEpgEventLongClicked(localTimeEvent: LocalTimeEvent) {
+            calendarEventOperationsState.value =
+                CalendarEventOperationsState.RemoveEpgEventRequested(epgEvent = localTimeEvent)
+        }
     }
 
     interface UiActionListener {
-        fun showAddTimeEventForm()
+        fun showAddEventForm(slotsViewType: SlotsViewType)
         fun confirmedAddTimeEvent(title: String, startLocalTime: LocalTime, endLocalTime: LocalTime)
-        fun showRemoveTimeEventForm()
         fun showRemoveTimeEventForm(timeEvent: LocalTimeEvent)
         fun confirmedRemoveTimeEvent(eventTitle: String)
-        fun showAddDecimalSegmentForm()
         fun confirmedAddDecimalSegment(title: String, startValue: Float, endValue: Float)
-        fun showRemoveDecimalEventForm()
         fun showRemoveDecimalEventForm(decimalEvent: DecimalEvent)
         fun confirmedRemoveDecimalEvent(eventTitle: String)
-        fun toggleAxisType()
+        fun toggleAxisType(slotsViewType: SlotsViewType)
         fun dismissInputForm()
         fun onTimeEventClicked(timeEvent: LocalTimeEvent)
         fun onTimeEventDoubleClicked(timeEvent: LocalTimeEvent)
@@ -206,5 +224,8 @@ class DayScheduleAppViewModel {
         fun onDecimalEventClicked(decimalEvent: DecimalEvent)
         fun onDecimalEventDoubleClicked(decimalEvent: DecimalEvent)
         fun onDecimalEventLongClicked(decimalEvent: DecimalEvent)
+        fun onEpgEventClicked(localTimeEvent: LocalTimeEvent)
+        fun onEpgEventDoubleClicked(localTimeEvent: LocalTimeEvent)
+        fun onEpgEventLongClicked(localTimeEvent: com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent)
     }
 }
