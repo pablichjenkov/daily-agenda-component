@@ -31,7 +31,6 @@ Daily Agenda View is a clone of the calendar component seeing in the **Microsoft
 </tr>
 </table>
 
-
 ## How to use it
 
 Add the gradle coordinates:
@@ -55,9 +54,16 @@ dependencies {
 
 <br/>
 
-The first thing you need is a **StateController**. You have to pick between **DecimalSlotsStateController** and
-**TimeSlotsStateController**. **DecimalSlotsStateController** for decimal value axiz and **TimeSlotsStateController**
-for hour and minute axis. **TvScheduleSlotController** (coming soon ...)
+The library API is based on the compose **StateController** pattern. A StateController is basically a mini MVI store just for a specific UI component.
+Instead of being coupled to a full screen single gigantic state. The state controller is only bound to a specific composable ui section of the screen.
+These are the options from the library:
+- [TimeSlotsStateController](#TimeSlotsStateController)
+- [DecimalSlotsStateController](#DecimalSlotsStateController)
+- [EpgSlotsStateController](#EpgSlotsStateController)
+
+### TimeSlotsStateController
+The **TimeSlotsStateController** displays events in a hour and minute based timeline.
+
 ```kotlin
 val timeSlotsStateController = remember {
     TimeSlotsStateController(
@@ -73,8 +79,8 @@ val timeSlotsStateController = remember {
                     title = "Event 0",
                     description = "Description 0"
                 )
-                addEventList(
-                    startTime = LocalTime(hour = 8, minute = 0), // This is the slot start time
+                addEventList( // When adding a list all events must belong to the same slot.
+                    startTime = LocalTime(hour = 8, minute = 0),
                     events =
                         listOf(
                             LocalTimeEvent(
@@ -101,12 +107,12 @@ val timeSlotsStateController = remember {
 
 <br/>
 
-Now that you create a **SlotStateController** and add some events to it. Then add a **TimeSlotsView** 
-in your Composable function:
+Now that you create a **TimeSlotsStateController** and added some events to it. Then add a **TimeSlotsView** 
+in your Composable screen.
 
 ```kotlin
 @Composable
-fun MySchedule(modifier = Modifier.fillMaxSize()) {
+fun MyDayScheduleView(modifier = Modifier.fillMaxSize()) {
 
     val timeSlotsStateController = remember { ... }
 
@@ -210,6 +216,145 @@ eventsArrangement = EventsArrangement.RightToLeft(lastEventFillRow = false)
 
 <img width="300" alt="daily-agenda-RTL-no-fill-end" src="https://github.com/user-attachments/assets/9994e98d-6d2d-4168-b2b4-59ac45e5210e" />
 
+### DecimalSlotsStateController
+The **DecimalSlotsStateController** displays events in a vertical **decimal axis**. Although use cases for this type of data presentation are rare, the 
+library includes it anyway in case someone needs it. This is actually the base StateController in which the TimeSlotsStateController builds upon.
+
+```kotlin
+DecimalSlotsStateController(
+    decimalSlotConfig =
+        DecimalSlotConfig(
+            initialSlotValue = 7.0F,
+            lastSlotValue = 19.0F,
+            slotScale = 2,
+            slotHeight = 48
+        ),
+    eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
+)
+    .apply {
+        decimalSlotsDataUpdater.postUpdate {
+            addDecimalEvent(
+                DecimalEvent(
+                    uuid = Uuid.random(),
+                    title = "Ev0",
+                    description = Constants.EmptyDescription,
+                    startValue = 8.5F,
+                    endValue = 10.0F
+                )
+            )
+            addDecimalEventList(
+                startValue = 8.0F,
+                segments = listOf(
+                    DecimalEvent(
+                        uuid = Uuid.random(),
+                        title = "Ev1",
+                        description = Constants.EmptyDescription,
+                        startValue = 8.0F,
+                        endValue = 10.0F
+                    ),
+                    DecimalEvent(
+                        uuid = Uuid.random(),
+                        title = "Ev2",
+                        description = Constants.EmptyDescription,
+                        startValue = 8.0F,
+                        endValue = 9.5F
+                    )
+                )
+            )
+        }
+    }
+
+```
+Then use the **DecimalSlotsView** Composable like bellow:
+
+```kotlin
+// Assuming the StateController is hosted in a ViewModel
+val decimalSlotsStateController =  viewModel.decimalSlotsStateController
+
+DecimalSlotsView(decimalSlotsStateController = decimalSlotsStateController) { decimalEvent ->
+    Text(text = "${decimalEvent.title}: ${decimalEvent.startValue}-${decimalEvent.endValue}", fontSize = 12.sp)
+}
+```
+
+### EpgSlotsStateController
+The library also includes an **EpgSlotsStateController**, EPG(Electronic Guide Program) is a very popular component in TV apps.
+Although other uses cases can leverage this type of component too.
+
+```kotlin
+val epgSlotsStateController = remember {
+    EpgSlotsStateController(
+        EpgChannelSlotConfig(
+            timeSlotConfig =
+                TimeSlotConfig(startSlotTime = LocalTime(6, 0), endSlotTime = LocalTime(23, 59))
+        )
+    )
+        .apply {
+            epgSlotsDataUpdater.postUpdate {
+                addChannel(
+                    EpgChannel(
+                        name = "Ch1",
+                        events =
+                            listOf(
+                                LocalTimeEvent(
+                                    uuid = Uuid.random(),
+                                    title = "Ev1",
+                                    description = Constants.EmptyDescription,
+                                    startTime = LocalTime(9, 0),
+                                    endTime = LocalTime(10, 0)
+                                ),
+                                LocalTimeEvent(
+                                    uuid = Uuid.random(),
+                                    title = "Ev2",
+                                    description = Constants.EmptyDescription,
+                                    startTime = LocalTime(10, 0),
+                                    endTime = LocalTime(11, 30)
+                                )
+                            )
+                    )
+                )
+                addChannel(
+                    EpgChannel(
+                        name = "Ch2",
+                        events =
+                            listOf(
+                                LocalTimeEvent(
+                                    uuid = Uuid.random(),
+                                    title = "Ev3",
+                                    description = Constants.EmptyDescription,
+                                    startTime = LocalTime(9, 30),
+                                    endTime = LocalTime(10, 15)
+                                ),
+                                LocalTimeEvent(
+                                    uuid = Uuid.random(),
+                                    title = "Ev4",
+                                    description = Constants.EmptyDescription,
+                                    startTime = LocalTime(10, 30),
+                                    endTime = LocalTime(11, 0)
+                                )
+                            )
+                    )
+                )
+            }
+        }
+}
+
+```
+Then use the **EpgSlotsView** to render the EpgSlotsStateController instance.
+
+```kotlin
+@Composable
+fun MyTvScheduleView(modifier = Modifier.fillMaxSize()) {
+
+    val epgSlotsStateController = remember { ... }
+
+    EpgSlotsView(epgSlotsStateController = epgSlotsStateController) { localTimeEvent ->
+        Text(
+            text = "${localTimeEvent.title}: ${localTimeEvent.startTime}-${localTimeEvent.endTime}",
+            fontSize = 12.sp
+        )
+    }
+}
+```
 
 ## Contributions
 

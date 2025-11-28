@@ -4,7 +4,7 @@ class EpgSlotsDataUpdater internal constructor(
     val epgSlotsStateController: EpgSlotsStateController
 ) {
 
-    fun addEvent(epgChannel: EpgChannel): Boolean {
+    fun addChannel(epgChannel: EpgChannel): Boolean {
         return epgSlotsStateController.epgChannels.add(epgChannel)
     }
 

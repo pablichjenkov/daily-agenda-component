@@ -137,25 +137,25 @@ private fun DecimalSlotExample(
     Box(modifier = Modifier.fillMaxSize()) {
         DecimalSlotsView(
             decimalSlotsStateController = decimalSlotsStateController
-        ) { event ->
+        ) { decimalEvent ->
             Box(
                 modifier = Modifier.fillMaxSize()
                     .padding(all = 2.dp)
                     .background(color = generateRandomColor())
                     .combinedClickable(
                         onClick = {
-                            uiActionListener.onDecimalEventClicked(event)
+                            uiActionListener.onDecimalEventClicked(decimalEvent)
                         },
                         onDoubleClick = {
-                            uiActionListener.onDecimalEventDoubleClicked(event)
+                            uiActionListener.onDecimalEventDoubleClicked(decimalEvent)
                         },
                         onLongClick = {
-                            uiActionListener.onDecimalEventLongClicked(event)
+                            uiActionListener.onDecimalEventLongClicked(decimalEvent)
                         }
                     )
             ) {
                 Text(
-                    text = "${event.title}: ${event.startValue}-${event.endValue}",
+                    text = "${decimalEvent.title}: ${decimalEvent.startValue}-${decimalEvent.endValue}",
                     fontSize = 12.sp
                 )
             }
@@ -170,7 +170,7 @@ private fun EpgSlotExample(
     uiActionListener: DayScheduleAppViewModel.UiActionListener
 ) {
 
-    val stateController = remember {
+    val epgSlotsStateController = remember {
         EpgSlotsStateController(
             EpgChannelSlotConfig(
                 timeSlotConfig = TimeSlotConfig(
@@ -179,7 +179,7 @@ private fun EpgSlotExample(
                 )
             )
         ).apply {
-            epgSlotsDataUpdater.addEvent(
+            epgSlotsDataUpdater.addChannel(
                 EpgChannel(
                     name = "Ch1",
                     events = listOf(
@@ -200,7 +200,7 @@ private fun EpgSlotExample(
                     )
                 )
             )
-            epgSlotsDataUpdater.addEvent(
+            epgSlotsDataUpdater.addChannel(
                 EpgChannel(
                     name = "Ch2",
                     events = listOf(
@@ -221,7 +221,7 @@ private fun EpgSlotExample(
                     )
                 )
             )
-            epgSlotsDataUpdater.addEvent(
+            epgSlotsDataUpdater.addChannel(
                 EpgChannel(
                     name = "Ch3",
                     events = listOf(
@@ -247,7 +247,7 @@ private fun EpgSlotExample(
     }
 
     EpgSlotsView(
-        epgSlotsStateController = stateController
+        epgSlotsStateController = epgSlotsStateController
     ) { localTimeEvent ->
         Box(
             modifier = Modifier.fillMaxSize().padding(2.dp)
