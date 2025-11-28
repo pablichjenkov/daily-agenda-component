@@ -54,7 +54,7 @@ dependencies {
 
 <br/>
 
-The library API is based on the compose **StateController** pattern. A StateController is basically a mini MVI store just for a specific UI component.
+The library API is based on the compose **StateController pattern**. A StateController is basically **a mini MVI store just for a specific UI component**.
 Instead of being coupled to a full screen single gigantic state. The state controller is only bound to a specific composable ui section of the screen.
 These are the options from the library:
 - [TimeSlotsStateController](#TimeSlotsStateController)
@@ -275,6 +275,9 @@ DecimalSlotsView(decimalSlotsStateController = decimalSlotsStateController) { de
     Text(text = "${decimalEvent.title}: ${decimalEvent.startValue}-${decimalEvent.endValue}", fontSize = 12.sp)
 }
 ```
+Above code should produce something like the image bellow. Notice the axis values are just decimal numbers, also this component doesn't have a current time line indicator.
+
+<img width="476" height="617" alt="decimal-axis" src="https://github.com/user-attachments/assets/cd123807-520c-4935-9ee7-cbd7f27ed329" />
 
 ### EpgSlotsStateController
 The library also includes an **EpgSlotsStateController**, EPG(Electronic Guide Program) is a very popular component in TV apps.
@@ -355,6 +358,8 @@ fun MyTvScheduleView(modifier = Modifier.fillMaxSize()) {
     }
 }
 ```
+
+<img width="400" alt="epg-view" src="https://github.com/user-attachments/assets/dc5d6df5-f3ae-4477-bf8c-844ddfb4762c" />
 
 ## Contributions
 
