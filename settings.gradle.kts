@@ -30,6 +30,6 @@ plugins {
 }
 
 rootProject.name = "daily-agenda-view"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+// enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS") // not working on github actions
 include(":composeApp")
 include(":daily-agenda-view")

@@ -42,7 +42,8 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.dailyAgendaView)
+            // implementation(projects.dailyAgendaView); not working on github actions
+            implementation(project(":daily-agenda-view"))
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.foundation)
