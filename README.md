@@ -1,6 +1,8 @@
 ## Daily Agenda View
 Daily Agenda View is a clone of the calendar component seeing in the **Microsoft Outlook App** or **Microsoft Teams App**. The component layouts daily events across an hourly based timeline. It is great for task planner apps, appointment apps, event schedule apps, calendar apps.
 
+Live demo using kotlin-wasm: [Daily Agenda View](https://pablichjenkov.github.io/daily-agenda-view)
+
 ## Support and Compatibility
 
 <table>
