@@ -23,22 +23,15 @@ import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsView
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
-import com.macaosoftware.ui.dailyagenda.epgslots.EpgChannel
-import com.macaosoftware.ui.dailyagenda.epgslots.EpgChannelSlotConfig
 import com.macaosoftware.ui.dailyagenda.epgslots.EpgSlotsStateController
 import com.macaosoftware.ui.dailyagenda.epgslots.EpgSlotsView
-import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
-import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsView
-import com.macaosoftware.ui.data.Constants
-import com.macaosoftware.ui.data.DecimalSegmentDataSample
+import com.macaosoftware.ui.data.DecimalSlotsDataSample
 import com.macaosoftware.ui.ui.model.AllDayEvent
-import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 @Preview
@@ -69,6 +62,7 @@ fun DayScheduleApp() {
 
                     SlotsViewType.Epg -> {
                         EpgSlotExample(
+                            epgSlotsStateController = viewModel.epgSlotsStateController,
                             uiActionListener = viewModel.uiActionListener
                         )
                     }
@@ -167,85 +161,9 @@ private fun DecimalSlotExample(
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 private fun EpgSlotExample(
+    epgSlotsStateController: EpgSlotsStateController,
     uiActionListener: DayScheduleAppViewModel.UiActionListener
 ) {
-
-    val epgSlotsStateController = remember {
-        EpgSlotsStateController(
-            EpgChannelSlotConfig(
-                timeSlotConfig = TimeSlotConfig(
-                    startSlotTime = LocalTime(6, 0),
-                    endSlotTime = LocalTime(23, 59)
-                )
-            )
-        ).apply {
-            epgSlotsDataUpdater.addChannel(
-                EpgChannel(
-                    name = "Ch1",
-                    events = listOf(
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev1",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(9, 0),
-                            endTime = LocalTime(10, 0)
-                        ),
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev2",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(10, 0),
-                            endTime = LocalTime(11, 30)
-                        )
-                    )
-                )
-            )
-            epgSlotsDataUpdater.addChannel(
-                EpgChannel(
-                    name = "Ch2",
-                    events = listOf(
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev3",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(9, 30),
-                            endTime = LocalTime(10, 15)
-                        ),
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev4",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(10, 30),
-                            endTime = LocalTime(11, 0)
-                        )
-                    )
-                )
-            )
-            epgSlotsDataUpdater.addChannel(
-                EpgChannel(
-                    name = "Ch3",
-                    events = listOf(
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev5",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(10, 0),
-                            endTime = LocalTime(11, 0)
-                        ),
-                        LocalTimeEvent(
-                            uuid = Uuid.random(),
-                            title = "Ev6",
-                            description = Constants.EmptyDescription,
-                            startTime = LocalTime(12, 0),
-                            endTime = LocalTime(13, 30)
-                        )
-                    )
-                )
-            )
-            epgSlotsDataUpdater.commit()
-        }
-    }
-
     EpgSlotsView(
         epgSlotsStateController = epgSlotsStateController
     ) { localTimeEvent ->
@@ -290,7 +208,7 @@ fun CalendarViewPreview() {
             eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
         ).apply {
             // Prepare the initial data
-            DecimalSegmentDataSample(decimalSlotsStateController = this)
+            DecimalSlotsDataSample(decimalSlotsStateController = this)
         }
     }
     MaterialTheme {

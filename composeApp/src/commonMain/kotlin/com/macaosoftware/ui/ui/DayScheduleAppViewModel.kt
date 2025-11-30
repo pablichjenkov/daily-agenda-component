@@ -8,12 +8,15 @@ import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotConfig
 import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalSlotsStateController
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventWidthType
 import com.macaosoftware.ui.dailyagenda.decimalslots.EventsArrangement
+import com.macaosoftware.ui.dailyagenda.epgslots.EpgChannelSlotConfig
+import com.macaosoftware.ui.dailyagenda.epgslots.EpgSlotsStateController
 import com.macaosoftware.ui.dailyagenda.timeslots.LocalTimeEvent
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotConfig
 import com.macaosoftware.ui.dailyagenda.timeslots.TimeSlotsStateController
 import com.macaosoftware.ui.data.Constants
-import com.macaosoftware.ui.data.DecimalSegmentDataSample
-import com.macaosoftware.ui.data.TimeEventDataSample
+import com.macaosoftware.ui.data.DecimalSlotsDataSample
+import com.macaosoftware.ui.data.EpgSlotsDataSample
+import com.macaosoftware.ui.data.TimeSlotsDataSample
 import com.macaosoftware.ui.ui.model.AllDayEvent
 import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -55,8 +58,7 @@ class DayScheduleAppViewModel {
             ),
             eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
         ).apply {
-            // Prepare the initial data
-            TimeEventDataSample(timeSlotsStateController = this)
+            TimeSlotsDataSample(timeSlotsStateController = this)
         }
     }
 
@@ -70,8 +72,21 @@ class DayScheduleAppViewModel {
             ),
             eventsArrangement = EventsArrangement.MixedDirections(EventWidthType.FixedSizeFillLastEvent)
         ).apply {
-            // Prepare the initial data
-            DecimalSegmentDataSample(decimalSlotsStateController = this)
+            DecimalSlotsDataSample(decimalSlotsStateController = this)
+        }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    val epgSlotsStateController by lazy {
+        EpgSlotsStateController(
+            EpgChannelSlotConfig(
+                timeSlotConfig = TimeSlotConfig(
+                    startSlotTime = LocalTime(6, 0),
+                    endSlotTime = LocalTime(23, 59)
+                )
+            )
+        ).apply {
+            EpgSlotsDataSample(epgSlotsStateController = this)
         }
     }
 

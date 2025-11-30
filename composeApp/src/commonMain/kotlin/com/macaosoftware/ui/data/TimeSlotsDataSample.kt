@@ -7,7 +7,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class TimeEventDataSample(timeSlotsStateController: TimeSlotsStateController) {
+class TimeSlotsDataSample(timeSlotsStateController: TimeSlotsStateController) {
 
     init {
         timeSlotsStateController.timeSlotsDataUpdater.postUpdate {

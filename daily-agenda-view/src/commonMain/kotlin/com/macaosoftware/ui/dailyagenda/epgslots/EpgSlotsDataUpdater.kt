@@ -8,7 +8,12 @@ class EpgSlotsDataUpdater internal constructor(
         return epgSlotsStateController.epgChannels.add(epgChannel)
     }
 
-    fun commit() {
+    internal fun commit() {
         epgSlotsStateController.updateState()
+    }
+
+    fun postUpdate(block: EpgSlotsDataUpdater.() -> Unit) {
+        this.block()
+        commit()
     }
 }

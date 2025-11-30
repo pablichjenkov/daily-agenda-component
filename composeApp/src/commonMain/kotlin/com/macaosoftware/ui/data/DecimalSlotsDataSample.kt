@@ -5,7 +5,7 @@ import com.macaosoftware.ui.dailyagenda.decimalslots.DecimalEvent
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class DecimalSegmentDataSample(decimalSlotsStateController: DecimalSlotsStateController) {
+class DecimalSlotsDataSample(decimalSlotsStateController: DecimalSlotsStateController) {
 
     init {
         decimalSlotsStateController.decimalSlotsDataUpdater.postUpdate {
