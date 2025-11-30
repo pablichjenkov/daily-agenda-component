@@ -160,17 +160,21 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmedAddTimeEvent(
-                                    title = textValueTitle,
-                                    startLocalTime = LocalTime(
-                                        textStartHour.toInt(),
-                                        textStartMinute.toInt()
-                                    ),
-                                    endLocalTime = LocalTime(
-                                        textEndHour.toInt(),
-                                        textEndMinute.toInt()
+                                try {
+                                    uiActionListener.confirmedAddTimeEvent(
+                                        title = textValueTitle,
+                                        startLocalTime = LocalTime(
+                                            textStartHour.toInt(),
+                                            textStartMinute.toInt()
+                                        ),
+                                        endLocalTime = LocalTime(
+                                            textEndHour.toInt(),
+                                            textEndMinute.toInt()
+                                        )
                                     )
-                                )
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
                             }
                         }) {
                             Text("Add")
@@ -315,11 +319,15 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmedAddDecimalSegment(
-                                    title = textValueTitle,
-                                    startValue = textStartValue.toFloat(),
-                                    endValue = textEndValue.toFloat()
-                                )
+                                try {
+                                    uiActionListener.confirmedAddDecimalSegment(
+                                        title = textValueTitle,
+                                        startValue = textStartValue.toFloat(),
+                                        endValue = textEndValue.toFloat()
+                                    )
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
                             }
                         }) {
                             Text("Add")
@@ -499,17 +507,21 @@ fun CalendarEventActionsInputForm(
                     Row {
                         Button(onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                uiActionListener.confirmedAddTimeEvent(
-                                    title = textValueTitle,
-                                    startLocalTime = LocalTime(
-                                        textStartHour.toInt(),
-                                        textStartMinute.toInt()
-                                    ),
-                                    endLocalTime = LocalTime(
-                                        textEndHour.toInt(),
-                                        textEndMinute.toInt()
+                                try {
+                                    uiActionListener.confirmedAddTimeEvent(
+                                        title = textValueTitle,
+                                        startLocalTime = LocalTime(
+                                            hour = textStartHour.toInt(),
+                                            minute = textStartMinute.toInt()
+                                        ),
+                                        endLocalTime = LocalTime(
+                                            hour = textEndHour.toInt(),
+                                            minute = textEndMinute.toInt()
+                                        )
                                     )
-                                )
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
                             }
                         }) {
                             Text("Add")
